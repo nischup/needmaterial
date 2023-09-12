@@ -1,0 +1,9 @@
+/*Custom css will be here*/
+.dashboard-menu li.child-menu {
+    padding-left: 40px;
+    font-size: 15px
+}
+
+.dashboard-menu li.child-menu a {
+    line-height: 25px;
+}

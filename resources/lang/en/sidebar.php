@@ -1,0 +1,26 @@
+<?php
+
+return array (
+  'Dashboard' => 'Dashboard',
+  'Default' => 'Default',
+  'Analytics' => 'Analytics',
+  'E-Commerce' => 'E-Commerce',
+  'SaaS' => 'SaaS',
+  'System' => 'System',
+  'Administrator' => 'Administrator',
+  'Users' => 'Users',
+  'Roles' => 'Roles',
+  'Permissions' => 'Permissions',
+  'Settings' => 'Settings',
+  'Language' => 'Language',
+  'Category' => 'Category',
+  'Company' => 'Company',
+  'Unit' => 'Unit',
+  'Brand' => 'Brand',
+  'Catalog' => 'Catalog',
+  'Subscription' => 'Subscription',
+  'Banner-Ad' => 'Banner-Ad',
+  'Made-In' => 'Made-In',
+  'Neighbourhood' => 'Neighbourhood',
+  'Page-Content' => 'Page-Content',
+);
