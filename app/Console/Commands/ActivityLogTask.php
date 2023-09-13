@@ -3,37 +3,20 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class ActivityLogTask extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'activity:log';
+    protected $signature = 'activity-log:clear';
+    protected $description = 'Clears all records from the activity_log table';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
-
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
-        // DB::table('activity_log')->delete();
-        info('hello world before');
+        // Delete all records from the activity_log table
+        DB::table('activity_log')->truncate();
 
-        // sleep(65);
+        $this->info('All records from the activity_log table have been deleted.');
 
-        //  info('hello world before');
-
-        return 0;
+        return Command::SUCCESS;
     }
 }

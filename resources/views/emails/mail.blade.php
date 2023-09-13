@@ -9,7 +9,7 @@
     <link href='https://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel="stylesheet">
     <!-- <![endif]-->
 
-    <title>Bid submission successful</title>
+    <title>Auction Created successful</title>
 
     <style type="text/css">
         body {
@@ -167,7 +167,7 @@
 
                             <tr>
                                 <td align="center" height="70" style="height:70px;">
-                                    <a href="" style="display: block; border-style: none !important; border: 0 !important;"><img width="100" border="0" style="display: block; width: 100px;" src="https://mdbootstrap.com/img/logo/mdb-email.png" alt="" /></a>
+                                    <a href="" style="display: block; border-style: none !important; border: 0 !important;"><img width="100" border="0" style="display: block; width: 100px;" src="https://needmaterials.com/frontend/images/logo/logo.png" alt="" /></a>
                                 </td>
                             </tr>
                         </table>
@@ -195,7 +195,7 @@
                     <td align="center" style="color: #343434; font-size: 24px; font-family: Quicksand, Calibri, sans-serif; font-weight:700;letter-spacing: 3px; line-height: 35px;" class="main-header">
 
                         <div style="line-height: 35px">
-                            Your bid is submitted.<span style="color: #5caad2;">Stay tuned so you don't lose out.</span>
+                            Your Auction Created <span style="color: #5caad2;"> <a href="{{ route('my-auction-products', ['slug' => $slug]) }}"> Check Your Bid History </a>  </span>
                         </div>
                     </td>
                 </tr>
@@ -203,7 +203,7 @@
                 <tr>
                     <td align="center" class="section-img">
                         <a href="" style="border-style: none !important; display: block; border: 0 !important;">
-                            <img src="{{ $bid->product->thumbnail->src }}" style="display: block; width: 290px;" width="290" border="0" alt="" />
+                            <img src="" style="display: block; width: 290px;" width="290" border="0" alt="" />
                         </a>
                     </td>
                 </tr>
@@ -233,9 +233,9 @@
                             <tr>
                                 <td align="center" style="color: #888888; font-size: 16px; font-family: 'Work Sans', Calibri, sans-serif; line-height: 24px;">
                                     <div style="line-height: 24px">
-                                        <strong style="margin-left: 0px;">Product Name: </strong> <span> {{ $bid->title }}  </span> <br>
-                                        <strong style="margin-left: 0px;"> Bid Amount:</strong> <span> {{ $bid->price }} USD </span> <br>
-                                        <strong style="margin-left: 0px;">Ends in: </strong> <span>{{ $bid->product->auction->end_time }}</span> <br>
+                                        <strong style="margin-left: 0px;">Auction Name: </strong> <span>  {{ $title }} </span> <br>
+                                        <strong style="margin-left: 0px;"> Start Time: </strong> <span> {{ date("j F, g:i a", strtotime($start_time))  }} </span> <br>
+                                        <strong style="margin-left: 0px;">Ends Time: </strong> <span>{{ date("j F, g:i a", strtotime($end_time)) }} </span> <br>
                                     </div>
                                 </td>
                             </tr>
@@ -249,13 +249,14 @@
                             <tr>
                                 <td align="center" style="color: #ffffff; font-size: 14px; font-family: 'Work Sans', Calibri, sans-serif; line-height: 26px;">
                                     <div style="line-height: 26px;">
-                                        <a href="{{ route('auction-product', ['slug' => $bid->product->auction->slug, 'catalogue_slug' => $bid->product->catalogue->slug]) }}" style="color: #ffffff; text-decoration: none;"> Check Your Bid </a>
+                                        <a href="{{ route('my-auction-products', ['slug' => $slug]) }}" style="color: #ffffff; text-decoration: none;"> Check Your Auction Product Details </a>
                                     </div>
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
+                
             </table>
 
         </td>
@@ -289,7 +290,7 @@
                             <tr>
                                 <!-- logo -->
                                 <td align="left">
-                                    <a href="" style="display: block; border-style: none !important; border: 0 !important;"><img width="80" border="0" style="display: block; width: 80px;" src="https://mdbootstrap.com/img/logo/mdb-email.png" alt="" /></a>
+                                    <a href="" style="display: block; border-style: none !important; border: 0 !important;"><img width="80" border="0" style="display: block; width: 80px;" src="https://needmaterials.com/frontend/images/logo/logo.png" alt="" /></a>
                                 </td>
                             </tr>
 

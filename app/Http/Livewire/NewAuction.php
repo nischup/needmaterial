@@ -21,6 +21,8 @@ use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Twilio\Rest\Client;
+use App\Mail\BidSubmissionSuccessful;
+use Illuminate\Support\Facades\Mail;
 
 class NewAuction extends Component
 {
@@ -136,21 +138,41 @@ class NewAuction extends Component
             //TODO:: notify users based on location
             //auth()->user()->notify(new \App\Notifications\NewAuction($auction));
             
-            $accountSid = 'ACff2f4f87ebb45c369dc243f54044eb9d';
-            $authToken = '062908fb278e0ef65bdcb66da9f9143a';
-            // $senderNumber = 'whatsapp:+12568672270';
-            $senderNumber = 'whatsapp:+14155238886';
+            // $accountSid = 'ACff2f4f87ebb45c369dc243f54044eb9d';
+            // $authToken = '062908fb278e0ef65bdcb66da9f9143a';
+            // // $senderNumber = 'whatsapp:+12568672270';
+            // $senderNumber = 'whatsapp:+14155238886';
             
             
-            $client = new Client($accountSid, $authToken);
-            $message = $client->messages->create(
-                // 'whatsapp:+8801686844781', // Recipient's WhatsApp number
-                'whatsapp:+8801613514109', // Recipient's WhatsApp number
-                [
-                    'from' => $senderNumber,
-                    'body' => 'New Auction Submitted to your area! Bid Now, Message Sent from needmaterials.com',
-                ]
+            // $client = new Client($accountSid, $authToken);
+            // $message = $client->messages->create(
+            //     // 'whatsapp:+8801686844781', // Recipient's WhatsApp number
+            //     'whatsapp:+8801613514109', // Recipient's WhatsApp number
+            //     [
+            //         'from' => $senderNumber,
+            //         'body' => 'New Auction Submitted to your area! Bid Now, Message Sent from needmaterials.com',
+            //     ]
+            // );
+
+            // Mail::to('ahsabbir23@gmail.com')->send(new BidSubmissionSuccessful());
+
+            $data = array(
+                'title' => $auction['title'],
+                'slug' => $auction['slug'],
+                'start_time' => $auction['start_time'],
+                'end_time' => $auction['end_time']
             );
+
+           $loged_user_email = auth()->user()->email;
+
+            if(!empty($loged_user_email)){
+                Mail::send('emails.mail', $data, function($message) use ($loged_user_email) {
+                    $message->to($loged_user_email)
+                        ->subject('Auction Created From needmaterials.com');
+                });
+            }
+
+
 
             session()->flash('message', __('Auction Created successfully.'));
             DB::commit();
