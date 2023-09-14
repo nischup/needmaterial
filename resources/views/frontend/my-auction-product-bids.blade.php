@@ -68,7 +68,7 @@
                                                         {{ $bid->bidder->name }}
                                                     @endif
                                                 </td>
-                                                <td style="width: 20%">{{ $bid->madein->name }}</td>
+                                                <td style="width: 20%">{{ optional($bid->madein)->name }}</td>
                                                 <td style="width: 10%">
                                                     <img style="width: 60px" src="{{ $bid->images && count($bid->images) ? $bid->images[0]->src : asset('frontend/images/50.webp') }}"
                                                          alt="{{ $bid->title }}">
