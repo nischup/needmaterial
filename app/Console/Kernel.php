@@ -17,7 +17,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
       $schedule->command('activity-log:clear')->everyMinute();
-      $schedule->command('send:mail')->everyMinute();
+      $schedule->command('auto-select:buying-winner')->everyMinute();
+      // $schedule->command('send:mail')->everyMinute();
     }
 
 

@@ -28,6 +28,7 @@ class PagesController extends Controller
         }])->join('auctions', 'auctions.id', '=', 'auction_products.auction_id')
             ->withCount('bids')
             ->where('auctions.end_time', '>', Carbon::now())
+            ->whereNull('winner_id') // Add this line to filter products with a winner
             ->orderBy('id', 'DESC')
             ->take(20)
             ->get()->map(function ($product) {
@@ -40,6 +41,7 @@ class PagesController extends Controller
         }])->join('auctions', 'auctions.id', '=', 'auction_products.auction_id')
             ->withCount('bids')
             ->where('auctions.end_time', '>', Carbon::now())
+            ->whereNull('winner_id') // Add this line to filter products with a winner
             ->where('auctions.featured', 1)
             ->orderBy('id', 'DESC')
             ->take(20)
@@ -264,6 +266,7 @@ class PagesController extends Controller
             ->whereHas('auction', function ($q) {
                 $q->where('service_type','!=',Auction::QUOTATION_SERVICE);
             })
+            ->where('winner_id', null) // Add this line to filter products with a null winner_id
             ->orderBy('id','desc')->paginate($request->perPage);
 
         $categories = Category::where('parent_id', 0)->get();

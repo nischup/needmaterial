@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class AuctionController extends Controller
 {
@@ -128,6 +129,7 @@ class AuctionController extends Controller
         ]);
 
 
+
         $bid = AuctionBidProduct::with('product.auction')->findOrFail($request->bid_id);
         if ($bid->product->auction->user_id != auth()->user()->id) {
             abort(403);
@@ -136,7 +138,17 @@ class AuctionController extends Controller
         $bid->product->winner_id = $request->bidder_id;
         $bid->product->save();
         AuctionProduct::where('id', $request->auction_product_id)->update(['status' => 1]);
-        $dataconfirm = AuctionBidProduct::where('auction_product_id', $request->auction_product_id)->where('user_id', $request->bidder_id)->where('price', $request->bid_price)->update(['winner_status' => 1]);
+
+        // // $dataconfirm = AuctionBidProduct::where('auction_product_id', $request->auction_product_id)->where('user_id', $request->bidder_id)->where('price', $request->bid_price)->update(['winner_status' => 1]);
+
+            
+        $dataconfirm = AuctionBidProduct::where('auction_product_id', $request->auction_product_id)
+            ->where('user_id', $request->bidder_id)
+            ->where('price', $request->bid_price)
+            ->orderBy('created_at', 'ASC') // Order by submitted_at in ascending order
+            ->limit(1) // Limit the update to one row
+            ->update(['winner_status' => 1]);
+
         if ($dataconfirm) {
             session()->flash('message', __('Winner selection done.'));
         }else{

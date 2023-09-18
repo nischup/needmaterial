@@ -215,7 +215,9 @@
                                             @if (Auth::user()->id == $product->auction->user_id)
                                                 <p  style="color: red; font-weight:bold;"> No Permission to submit bid </p>
                                             @elseif (Auth::user()->user_type == 1 && $product->auction->service_type ==1)
-                                                <p  style="color: red; font-weight:bold;"> Customer are not able to submit buying bid </p>
+                                                <p  style="color: red; font-weight:bold;"> Customer are not able to submit buying bid </p>        
+                                            @elseif ($product->winner_id != null)
+                                                <p  style="color: blue; font-weight:bold;"> This Bid is Closed </p>
                                             @else
                                                 <button type="submit" class="custom-button">Submit this bid</button>
                                         @endif
