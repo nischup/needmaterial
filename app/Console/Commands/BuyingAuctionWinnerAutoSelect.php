@@ -30,6 +30,9 @@ class BuyingAuctionWinnerAutoSelect extends Command
      */
     public function handle()
     {
+
+
+        // original one
           // $bidProduct = AuctionBidProduct::where('created_at', '<', Carbon::now()->subMinutes(5))
           //       ->where('winner_status', 0)
           //       ->orderBy('price', 'ASC')
@@ -44,31 +47,58 @@ class BuyingAuctionWinnerAutoSelect extends Command
           //       AuctionProduct::where('auction_id', $bidProduct->auction_product_id)
           //           ->update(['status' => 1, 'winner_id' => $winnerId]);
           //   }
+     // original one end
 
-           $bidProduct = AuctionBidProduct::where('created_at', '<', Carbon::now()->subMinutes(5))
+        // db changes    
+        // attribute = product_auto_win_status          
+        // comments =  0=product not select winner, 1=winner selected  
+
+        $bidProduct = AuctionBidProduct::where('created_at', '<', Carbon::now()->subMinutes(5))
                 ->where('winner_status', 0)
-                ->select('auction_product_id', DB::raw('MIN(price) as min_price'))
-                ->groupBy('auction_product_id')
-                ->orderBy('min_price', 'ASC')
-                ->orderBy('auction_product_id', 'ASC')
-                ->first();
+                ->orderBy('price', 'ASC')
+                ->orderBy('created_at', 'ASC')
+                ->first(); 
 
-            if ($bidProduct) {
-                $auctionId = $bidProduct->auction_product_id;
-                $minPrice = $bidProduct->min_price;
+            if ($bidProduct && $bidProduct->product_auto_win_status == 0) {
+                $bidProduct->update(['winner_status' => 1]);
 
-                $winnerId = AuctionBidProduct::where('auction_product_id', $auctionId)
-                    ->where('price', $minPrice)
-                    ->value('user_id');
+                 AuctionBidProduct::where('auction_product_id', $bidProduct->auction_product_id)
+                    ->update(['product_auto_win_status' => 1]);
 
-                AuctionBidProduct::where('auction_product_id', $auctionId)
-                    ->where('price', $minPrice)
-                    ->update(['winner_status' => 1]);
+                $winnerId = $bidProduct->user_id;
 
-                AuctionProduct::where('auction_id', $auctionId)
+                AuctionProduct::where('auction_id', $bidProduct->auction_product_id)
                     ->update(['status' => 1, 'winner_id' => $winnerId]);
-                
             }
+           
+
+
+
+        // test this data for latest update
+           // $bidProduct = AuctionBidProduct::where('created_at', '<', Carbon::now()->subMinutes(5))
+           //      ->where('winner_status', 0)
+           //      ->select('auction_product_id', DB::raw('MIN(price) as min_price'))
+           //      ->groupBy('auction_product_id')
+           //      ->orderBy('min_price', 'ASC')
+           //      ->orderBy('auction_product_id', 'ASC')
+           //      ->first();
+
+           //  if ($bidProduct) {
+           //      $auctionId = $bidProduct->auction_product_id;
+           //      $minPrice = $bidProduct->min_price;
+
+           //      $winnerId = AuctionBidProduct::where('auction_product_id', $auctionId)
+           //          ->where('price', $minPrice)
+           //          ->value('user_id');
+
+           //      AuctionBidProduct::where('auction_product_id', $auctionId)
+           //          ->where('price', $minPrice)
+           //          ->update(['winner_status' => 1]);
+
+           //      AuctionProduct::where('auction_id', $auctionId)
+           //          ->update(['status' => 1, 'winner_id' => $winnerId]);
+                
+           //  }
 
 
         $this->info('Winner autometically selected from buying request');
