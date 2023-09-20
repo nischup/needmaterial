@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('quantity')->nullable();
             $table->double('delivery_charge')->nullable();
             $table->integer('winner_status')->default(0)->comment('0="no winner", 1="winner selected"');
+            $table->integer('product_auto_win_status')->default(0)->comment('0="product not select winner", 1="winner selected"');
             $table->timestamps();
         });
     }

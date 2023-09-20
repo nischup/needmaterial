@@ -5,7 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\AuctionBidProduct;
 use App\Models\AuctionProduct;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class BuyingAuctionWinnerAutoSelect extends Command
 {
@@ -14,7 +16,7 @@ class BuyingAuctionWinnerAutoSelect extends Command
      *
      * @var string
      */
-    protected $signature = 'auto-select:buying-winner';
+    protected $signature = 'bidder-auto-select:buying-auction';
 
     /**
      * The console command description.
@@ -47,16 +49,17 @@ class BuyingAuctionWinnerAutoSelect extends Command
           //       AuctionProduct::where('auction_id', $bidProduct->auction_product_id)
           //           ->update(['status' => 1, 'winner_id' => $winnerId]);
           //   }
-     // original one end
+     // original workable programm one end
 
-        // db changes    
-        // attribute = product_auto_win_status          
-        // comments =  0=product not select winner, 1=winner selected  
 
-        $bidProduct = AuctionBidProduct::where('created_at', '<', Carbon::now()->subMinutes(5))
+
+        $bidProduct = AuctionBidProduct::with('auction')->where('created_at', '<', Carbon::now()->subMinutes(5))
                 ->where('winner_status', 0)
                 ->orderBy('price', 'ASC')
                 ->orderBy('created_at', 'ASC')
+                ->whereHas('auction', function ($query) {
+                        $query->where('service_type', '1');
+                    })
                 ->first(); 
 
             if ($bidProduct && $bidProduct->product_auto_win_status == 0) {
@@ -69,9 +72,24 @@ class BuyingAuctionWinnerAutoSelect extends Command
 
                 AuctionProduct::where('auction_id', $bidProduct->auction_product_id)
                     ->update(['status' => 1, 'winner_id' => $winnerId]);
+
+                $winner_email = User::where('id', $winnerId)->first()->email;
+
+                if (!empty($winner_email)) {
+                    $data = array('data' => 'Corn job testing mail');
+                    
+                    Mail::send('emails.test', $data, function($message) use ($winner_email) {
+                        $message->to($winner_email)
+                            ->subject('Congratulations !!! You are selected for this bid');
+                    });
+
+                    // Mail::send('emails.test', $data, function ($message) use ($winner_email) {
+                    //     $message->to($winner_email)
+                    //         ->subject('Congratulations !!! You are selected for this bid');
+                    // });
+                }
             }
            
-
 
 
         // test this data for latest update

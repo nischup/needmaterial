@@ -142,18 +142,29 @@ class AuctionController extends Controller
         // // $dataconfirm = AuctionBidProduct::where('auction_product_id', $request->auction_product_id)->where('user_id', $request->bidder_id)->where('price', $request->bid_price)->update(['winner_status' => 1]);
 
             
-        $dataconfirm = AuctionBidProduct::where('auction_product_id', $request->auction_product_id)
+        $bidProduct = AuctionBidProduct::where('auction_product_id', $request->auction_product_id)
             ->where('user_id', $request->bidder_id)
             ->where('price', $request->bid_price)
-            ->orderBy('created_at', 'ASC') // Order by submitted_at in ascending order
-            ->limit(1) // Limit the update to one row
-            ->update(['winner_status' => 1]);
+            ->orderBy('created_at', 'ASC') 
+            ->first(); 
 
-        if ($dataconfirm) {
-            session()->flash('message', __('Winner selection done.'));
-        }else{
-            session()->flash('message', __('Sorry Something went wrong.'));
-        }
+            if ($bidProduct) {
+                // Update the record
+                $bidProduct->update(['winner_status' => 1]);
+
+                AuctionBidProduct::where('auction_product_id', $request->auction_product_id)
+                    ->update(['product_auto_win_status' => 1]);
+
+                session()->flash('message', __('Winner selection done.'));
+            } else {
+              session()->flash('message', __('Sorry Something went wrong.'));
+            }
+
+        // if ($bidProduct) {
+        //     session()->flash('message', __('Winner selection done.'));
+        // }else{
+        //     session()->flash('message', __('Sorry Something went wrong.'));
+        // }
 
         return redirect()->back();
     }
