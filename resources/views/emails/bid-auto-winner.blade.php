@@ -199,7 +199,7 @@
                         </div> 
 
                         <div style="line-height: 35px">
-                            Check My Bid History <span style="color: #5caad2;"> <a href="{{ route('frontend.myBids') }}"> Check My Bid </a>  </span>
+                          You are selected for this bid
                         </div>
                     </td>
                 </tr>
