@@ -76,9 +76,15 @@ class BuyingAuctionWinnerAutoSelect extends Command
                 $winner_email = User::where('id', $winnerId)->first()->email;
 
                 if (!empty($winner_email)) {
-                    $data = array('data' => 'Corn job testing mail');
+
+                     $data = array(
+                        'title' => $bidProduct->title,
+                        'price' => $bidProduct->price,
+                        'bid_date' => $bidProduct->created_at,
+                        'delivery_charge' => $bidProduct->delivery_charge
+                    );
                     
-                    Mail::send('emails.test', $data, function($message) use ($winner_email) {
+                    Mail::send('emails.bid-auto-winner', $data, function($message) use ($winner_email) {
                         $message->to($winner_email)
                             ->subject('Congratulations !!! You are selected for this bid');
                     });
