@@ -99,7 +99,8 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="mb-30" id="suppliers_div" style="display: none">
+                {{-- <div class="mb-30" id="suppliers_div" style="display: none"> --}}
+                <div class="mb-30" >
                     <label for="suppliers"> {{ __('Target suppliers') }}</label>
                     <select id="suppliers" class="form-control">
                         <option value="">{{ __('Target suppliers') }}</option>
