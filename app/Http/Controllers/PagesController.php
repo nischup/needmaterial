@@ -471,7 +471,13 @@ class PagesController extends Controller
             $auctions = Auction::where('user_id', auth()->user()->id)
                 ->where('end_time', '<=', Carbon::now())->orderBy('id', 'desc');
         }else if ($status == 'won') {
-            $auctions = Auction::where('user_id', auth()->user()->id)->orderBy('id', 'desc');
+            // $auctions = Auction::where('user_id', auth()->user()->id)->orderBy('id', 'desc');
+
+              $auctions = Auction::where('user_id', auth()->user()->id)
+                ->whereHas('products', function ($q) {
+                    $q->whereNotNull('winner_id')->orderBy('id', 'desc');
+                });
+                
         } 
         // else if ($status == 'won') {
         //     $auctions = Auction::whereHas('products', function ($q) {

@@ -36,8 +36,9 @@ class NewAuction extends Component
     public $service_type, $is_open_bid = 1;
     public $products = [];
     public $catalogues = [];
-    public $neighbourhoodies = [];
-    public $product, $brands, $made_in, $units, $suppliers, $countries, $city, $selectedSuppliers, $thumbnail;
+    public $neighbourhood_list = [];
+    public $supplier_list = [];
+    public $product, $brands, $made_in, $units, $suppliers, $countries, $city, $neighbourhood, $selectedSuppliers, $thumbnail;
     public $selectedProducts = [];
     public $addingNewProduct = false, $updatingProductKey = false;
     public $comment, $p_category;
@@ -229,18 +230,39 @@ class NewAuction extends Component
 
     public function cityChanged($cityId)
     {
-        $this->suppliers = null;
+        $this->neighbourhood_list = [];
         if (!$cityId) {
             return;
         }
 
-        $this->suppliers = User::role(User::SUPPLIER_ROLE_NAME)
-            ->whereHas('profile')
-            ->with('profile', function ($q) use ($cityId) {
-                $q->where('city', $cityId);
-            })->get();   
+        // $this->suppliers = User::role(User::SUPPLIER_ROLE_NAME)
+        //     ->whereHas('profile')
+        //     ->with('profile', function ($q) use ($cityId) {
+        //         $q->where('city', $cityId);
+        //     })->get();   
 
-        $this->neighbourhoodies = Neighbourhood::select('id', 'title')->where('city_id', $cityId)->get();
+        $this->neighbourhood_list = Neighbourhood::select('id', 'title')->where('city_id', $cityId)->get()->toArray();
+
+    }
+
+
+    public function neighborhoodToSupplier($neighbourhood_id)
+    {
+
+        $this->suppliers = [];
+        if (!$neighbourhood_id) {
+            return;
+        } 
+
+
+        $this->suppliers = User::with('profile.company')->join('user_profiles', 'users.id', '=', 'user_profiles.user_id')
+             ->where('neighbourhood', $neighbourhood_id)
+               ->whereHas('roles', function($q){
+                   $q->where("name", User::SUPPLIER_ROLE_NAME);
+               })
+             ->get();     
+        // dd($this->suppliers);
+
 
     }
 
@@ -291,11 +313,11 @@ class NewAuction extends Component
         $this->units = Unit::get();
         $this->made_in = MadeIn::get();
         $this->countries = Country::whereIn('id', ['19','194','231'])->get();
-        $this->neighbourhoodies = Neighbourhood::select('id', 'title')->get();
-//        $this->suppliers = User::with('profile.company')
-//            ->whereHas('roles', function($q){
-//                $q->where("name", User::SUPPLIER_ROLE_NAME);
-//            })->get();
+        $this->neighbourhood_list = Neighbourhood::select('id', 'title')->get();
+       $this->suppliers = User::with('profile.company')
+           ->whereHas('roles', function($q){
+               $q->where("name", User::SUPPLIER_ROLE_NAME);
+           })->get();
     }
 
     public function addRow()

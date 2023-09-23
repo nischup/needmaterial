@@ -72,35 +72,54 @@
                     @error('country') <span class="text-danger error">{{ $message }}</span>@enderror
                 </div>
             </div>
-            @if($cities)
+            {{-- @if($cities) --}}
             <div class="col-md-3">
-                <div class="mb-30" id="city_div" style="display: block">
+                {{-- <div class="mb-30" id="city_div" style="display: block"> --}}
+                <div class="mb-30">
                     <label for="city"> {{ __('City') }}</label>
                     <select id="city" class="form-control" wire:model.defer="city" wire:change="cityChanged($event.target.value)">
+                        <option value="">{{ __('Select City') }}</option>
                         @foreach($cities as $ct)
                             <option value="{{ $ct['id'] }}">{{ $ct['name'] }}</option>
                         @endforeach
                     </select>
-                    @error('selectedSuppliers') <span class="text-danger error">{{ $message }}</span>@enderror
+                    @error('city') <span class="text-danger error">{{ $message }}</span>@enderror
                 </div>
             </div>
-            @endif
+            {{-- @endif --}}
 
             <div class="col-md-3">
-                <div class="mb-30" wire:ignore id="neighborhood_div" style="display: block">
+                {{-- <div class="mb-30" wire:ignore id="neighborhood_div" style="display: none"> --}}
+                <div class="mb-30" wire:ignore id="neighborhood_div" >
                     <label for="neighborhood"> {{ __('Neighborhood') }}</label>
-                    <select class="form-select pl-3" id="citySelect">
+                    <select class="form-select pl-3" id="citySelect" wire:change="neighborhoodToSupplier($event.target.value)">
                             <option value="">{{ __('Select neighbourhood') }}</option>
-                            @foreach($neighbourhoodies as $item)
-                                <option value="{{ $item->id }}">{{ $item->title }}</option>
+                            @foreach($neighbourhood_list as $item)
+                                <option value="{{ $item['id'] }}">{{ $item['title'] }}</option>
                             @endforeach
                         </select>
                     @error('selectedSuppliers') <span class="text-danger error">{{ $message }}</span>@enderror
                 </div>
-            </div>
+            </div>               
+
             <div class="col-md-3">
-                {{-- <div class="mb-30" id="suppliers_div" style="display: none"> --}}
-                <div class="mb-30" >
+                <div class="mb-30" wire:ignore id="sup_div" style="display: none">
+                {{-- <div class="mb-30" wire:ignore id="neighborhood_div" > --}}
+                    <label for="supplier"> {{ __('Target suppliers') }}</label>
+                    <select class="form-select pl-3" id="suppliers">
+                            <option value="">{{ __('Select suppliers') }}</option>
+                           @foreach($suppliers ?? [] as $supplier)
+                            <option value="{{ $supplier->id }}">
+                                {{ $supplier->profile ? ($supplier->profile->company ? $supplier->profile->company->name : $supplier->name) : $supplier->name }}
+                            </option>
+                        @endforeach
+                        </select>
+                    @error('selectedSuppliers') <span class="text-danger error">{{ $message }}</span>@enderror
+                </div>
+            </div>            
+
+{{--             <div class="col-md-3">
+                <div class="mb-30" id="suppliers_div" style="display: none">
                     <label for="suppliers"> {{ __('Target suppliers') }}</label>
                     <select id="suppliers" class="form-control">
                         <option value="">{{ __('Target suppliers') }}</option>
@@ -112,7 +131,7 @@
                     </select>
                     @error('selectedSuppliers') <span class="text-danger error">{{ $message }}</span>@enderror
                 </div>
-            </div>
+            </div> --}}
 
         </div>
 
@@ -623,18 +642,28 @@
 
         $("input[name$='is_open_bid']").click(function() {
             let is_open_bid = $(this).val();
+            // is_open_bid = 0 mean close bid, 1 mean open bid
             if(is_open_bid == 0) {
                 // $('#country_div').show();
                 // $('#city_div').show();
                 $('#suppliers_div').show();
-                $('#neighborhood_div').show();
-            } else {
+                $('#sup_div').show();
+            }else if(is_open_bid == 1) {
                 // $('#country_div').show();
                 // $('#city_div').show();
-                $('#suppliers_div').hide();
-                // $('#neighborhood_div').hide();
+               $('#suppliers_div').hide();
+                $('#sup_div').hide();
             }
         });
+
+        // Prevent the #suppliers_div from hiding when changing the country
+        $("#country").on("change", function () {
+            if ($("input[name$='is_open_bid']:checked").val() == 0) {
+                $('#suppliers_div').show();
+            }
+        });
+
+
 
         function initSelect2() {
             $('#suppliers').select2({

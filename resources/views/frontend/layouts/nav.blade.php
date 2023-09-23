@@ -22,22 +22,24 @@
                     </li>
                     <li>
                         <i class="fas fa-globe"></i>
-                        <select name="language" class="select-bar" id="changeLang">
-                            @php
-                                $locales = get_locales();
-                            @endphp
-                            @if($locales)
-                                @foreach($locales as $locale)
-                                    <option value="{{ $locale }}" {{ session()->get('locale') == $locale ? 'selected' : '' }}>
-                                        {{ strtoupper($locale) }}
-                                    </option>
-                                @endforeach
-                            @else
-                                <option value="{{ app()->getLocale() }}" selected>
-                                    {{ strtoupper(app()->getLocale()) }}
+                            <select name="language" class="select-bar" id="changeLang">
+                                <option value="en" {{ session()->get('locale') == 'en' ? 'selected' : '' }}>
+                                    EN
                                 </option>
-                            @endif
-                        </select>
+                                @php
+                                    $locales = get_locales();
+                                @endphp
+                                @if($locales)
+                                    @foreach($locales as $locale)
+                                        @if($locale !== 'en') <!-- Skip 'en' to avoid duplicates -->
+                                            <option value="{{ $locale }}" {{ session()->get('locale') == $locale ? 'selected' : '' }}>
+                                                {{ strtoupper($locale) }}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </select>
+
                     </li>
                 </ul>
                 <ul class="cart-button-area">
