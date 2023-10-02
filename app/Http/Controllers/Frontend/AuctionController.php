@@ -54,7 +54,14 @@ class AuctionController extends Controller
 
         $this->sendSuccessSMS($bid->id);
 
-        // Mail::to($request->user())->send(new BidSubmissionSuccessful($bid->id));
+        $auction = $auctionProduct->auction;
+        $user = $auction->user;
+        $auctionCreateduserEmail = $user->email;
+
+        if ($auctionCreateduserEmail) {
+            Mail::to($auctionCreateduserEmail)->send(new BidSubmissionSuccessful($bid->id));
+        }
+        Mail::to($request->user())->send(new BidSubmissionSuccessful($bid->id));
 
         return response()->json(['message' => 'Success']);
     }

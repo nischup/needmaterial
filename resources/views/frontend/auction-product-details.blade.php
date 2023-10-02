@@ -219,7 +219,7 @@
                                             @elseif ($product->winner_id != null)
                                                 <p  style="color: blue; font-weight:bold;"> This Bid is Closed </p>
                                             @else
-                                                <button type="submit" class="custom-button">Submit this bid</button>
+                                                <button type="submit" class="custom-button">  Bid Now </button>
                                         @endif
 
                                     </div>

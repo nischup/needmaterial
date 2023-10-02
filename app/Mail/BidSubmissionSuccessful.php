@@ -31,7 +31,7 @@ class BidSubmissionSuccessful extends Mailable
     public function build()
     {
         return $this->from(config('mail.from.address'), config('mail.from.name'))
-            ->subject('Bid success')
+            ->subject('Bid Submission Successfull')
             ->view('emails.bid_success');
     }
 }
