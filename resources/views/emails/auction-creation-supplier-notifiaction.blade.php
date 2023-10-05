@@ -197,7 +197,7 @@
                     <td align="center" style="color: #343434; font-size: 24px; font-family: Quicksand, Calibri, sans-serif; font-weight:700;letter-spacing: 3px; line-height: 35px;" class="main-header">
 
                         <div style="line-height: 35px">
-                            Your Auction Created <span style="color: #5caad2;"> <a href="{{ route('my-auction-products', ['slug' => $slug]) }}"> Check Your Bid History </a>  </span>
+                             Auction Created , <span style="color: #5caad2;"> <a href="#"> in Your Area </a>  </span>
                         </div>
                     </td>
                 </tr>

@@ -131,9 +131,6 @@ class NewAuction extends Component
                 'delivery_date' => $this->delivery_date
             ]);
 
-
-            $auctionService->storeSelectedSuppliers($auction->id, $this->selectedSuppliers);
-
             $auctionService->storeAuctionProducts($auction->id, $this->selectedProducts);
 
             //TODO:: notify users based on location
@@ -155,7 +152,6 @@ class NewAuction extends Component
             //     ]
             // );
 
-            // Mail::to('ahsabbir23@gmail.com')->send(new BidSubmissionSuccessful());
 
             $data = array(
                 'title' => $auction['title'],
@@ -164,12 +160,30 @@ class NewAuction extends Component
                 'end_time' => $auction['end_time']
             );
 
-           $loged_user_email = auth()->user()->email;
+            $loged_user_email = auth()->user()->email;
+
+            $auction = Auction::with(['products.catalogue.images', 'unit'])->where('id', $auction->id)->first();
+
+            if ($this->selectedSuppliers) {
+                $supplier_email_data = User::whereIn('id', $this->selectedSuppliers)->get();
+                $auctionService->storeSelectedSuppliers($auction->id, $this->selectedSuppliers);
+                $emailsToSend = $supplier_email_data->pluck('email');
+                // dd($emailsToSend);
+                if(!empty($emailsToSend)){
+                    foreach ($emailsToSend as $email) {
+                        Mail::send('emails.auction-creation-supplier-notifiaction', $data, function($message) use ($email) {
+                            $message->to($email)
+                                ->subject('Auction Created in Your Area, Bid Now');
+                        });
+                    }
+                }
+            }
+
 
             if(!empty($loged_user_email)){
                 Mail::send('emails.mail', $data, function($message) use ($loged_user_email) {
                     $message->to($loged_user_email)
-                        ->subject('Auction Created From needmaterials.com');
+                        ->subject('Your Auction Created, Check Now');
                 });
             }
 
