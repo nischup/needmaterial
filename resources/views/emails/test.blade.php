@@ -8,11 +8,6 @@
 <body>
 	<h1> Congratulation </h1> <br> 
 
-	TITLE: {{ $title }}
-	PRICE: {{ $price }}
-	BID DATE : {{ $bid_date }}
-	DELIVERY CHARGE: {{ $delivery_charge }}
-
 	  <a href="{{ route('frontend.myBids') }}" style="color: #ffffff; text-decoration: none;"> Check My Bid History </a>
 
 	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
