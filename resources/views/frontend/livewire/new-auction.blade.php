@@ -89,16 +89,15 @@
             {{-- @endif --}}
 
             <div class="col-md-3">
-                {{-- <div class="mb-30" wire:ignore id="neighborhood_div" style="display: none"> --}}
-                <div class="mb-30" wire:ignore id="neighborhood_div" >
+                <div class="mb-30" >
                     <label for="neighborhood"> {{ __('Neighborhood') }}</label>
-                    <select class="form-select pl-3" id="citySelect" wire:change="neighborhoodToSupplier($event.target.value)">
-                            <option value="">{{ __('Select neighbourhood') }}</option>
-                            @foreach($neighbourhood_list as $item)
+                    <select id="neighbourhood" class="form-control" wire:model.defer="neighbourhood"  wire:change="neighborhoodToSupplier($event.target.value)">
+                            <option value="">{{ __('Select Neighbourhood') }}</option>
+                            @foreach($neighbourhoodies as $item)
                                 <option value="{{ $item['id'] }}">{{ $item['title'] }}</option>
                             @endforeach
                         </select>
-                    @error('selectedSuppliers') <span class="text-danger error">{{ $message }}</span>@enderror
+                    @error('neighborhood') <span class="text-danger error">{{ $message }}</span>@enderror
                 </div>
             </div>               
 
@@ -582,9 +581,8 @@
         // END MAP RELATED JS
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('app.google_map_api_key') }}&libraries=places&callback=initialize" async defer></script>
-    <script src="https://cdn.tiny.cloud/1/17ycczrflflupm9i12k8e0q2tp8gua0mlhkzcb1kkbirlaxv/tinymce/6/tinymce.min.js"
-            referrerpolicy="origin"></script>
-    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/aswexnockvogv8r0hcovijj1a2512gqsbr994s0ca5h05wsi/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
 
     <script>
         tinymce.init({

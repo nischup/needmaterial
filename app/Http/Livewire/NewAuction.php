@@ -31,6 +31,7 @@ class NewAuction extends Component
     public $category_column, $category;
     public $child_categories = [];
     public $cities = [];
+    public $neighbourhoodies = [];
     public $title, $featured, $description, $product_title, $brand, $unit, $is_exact_item, $delivery_address, $lat, $long, $start_time, $end_time;
     public $delivery_cost_included, $vat, $delivery_date;
     public $service_type, $is_open_bid = 1;
@@ -244,7 +245,7 @@ class NewAuction extends Component
 
     public function cityChanged($cityId)
     {
-        $this->neighbourhood_list = [];
+        $this->neighbourhoodies = [];
         if (!$cityId) {
             return;
         }
@@ -255,7 +256,7 @@ class NewAuction extends Component
         //         $q->where('city', $cityId);
         //     })->get();   
 
-        $this->neighbourhood_list = Neighbourhood::select('id', 'title')->where('city_id', $cityId)->get()->toArray();
+        $this->neighbourhoodies = Neighbourhood::select('id', 'title')->where('city_id', $cityId)->get()->toArray();
 
     }
 
@@ -274,6 +275,7 @@ class NewAuction extends Component
                ->whereHas('roles', function($q){
                    $q->where("name", User::SUPPLIER_ROLE_NAME);
                })
+             ->select('users.name', 'users.email', 'users.phone', 'user_profiles.company_phone')
              ->get();     
         // dd($this->suppliers);
 
