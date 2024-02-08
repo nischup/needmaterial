@@ -581,7 +581,7 @@
         // END MAP RELATED JS
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('app.google_map_api_key') }}&libraries=places&callback=initialize" async defer></script>
-    <script src="https://cdn.tiny.cloud/1/aswexnockvogv8r0hcovijj1a2512gqsbr994s0ca5h05wsi/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6.8.3-22/tinymce.min.js" referrerpolicy="origin"></script>
 
 
     <script>
