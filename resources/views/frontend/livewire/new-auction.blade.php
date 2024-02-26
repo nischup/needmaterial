@@ -106,7 +106,7 @@
                 {{-- <div class="mb-30" wire:ignore id="neighborhood_div" > --}}
                     <label for="supplier"> {{ __('Target suppliers') }}</label>
                     <select class="form-select pl-3" id="suppliers">
-                            <option value="">{{ __('Select suppliers') }}</option>
+                            {{-- <option value="">{{ __('Select suppliers') }}</option> --}}
                            @foreach($suppliers ?? [] as $supplier)
                             <option value="{{ $supplier->id }}">
                                 {{ $supplier->profile ? ($supplier->profile->company ? $supplier->profile->company->name : $supplier->name) : $supplier->name }}
