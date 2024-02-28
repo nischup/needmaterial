@@ -580,8 +580,10 @@
         }
         // END MAP RELATED JS
     </script>
+
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('app.google_map_api_key') }}&libraries=places&callback=initialize" async defer></script>
-    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6.8.3-22/tinymce.min.js" referrerpolicy="origin"></script>
+    
+    <script src="https://cdn.tiny.cloud/1/gkqsnjww1dgzb34lnwm9o8za5nygcm3hrzgtarfeskqdi319/tinymce/6.8.3-22/tinymce.min.js" referrerpolicy="origin"></script>
 
 
     <script>
