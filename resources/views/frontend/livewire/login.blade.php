@@ -28,11 +28,11 @@
         @error('login') <span class="text-danger error">{{ $message }}</span>@enderror
     </div>
 
-    <div class="mb-30">
+   <div class="mb-30">
         <div class="form-group mb-0">
             <label for="password"><i class="fas fa-lock"></i></label>
             <input type="password" wire:model.defer="password" id="password" placeholder="{{ __('Password') }}">
-            <span class="pass-type"><i class="fas fa-eye"></i></span>
+             <span class="pass-type pass-toggle" onclick="togglePasswordVisibility()"><i class="fas fa-eye"></i></span>
         </div>
         @error('password') <span class="text-danger error">{{ $message }}</span>@enderror
     </div>
@@ -47,3 +47,20 @@
         <button type="button" wire:click.prevent="authenticate" class="custom-button">{{ __('Log in') }}</button>
     </div>
 </form>
+
+<script>
+function togglePasswordVisibility() {
+    var passwordInput = document.getElementById("password");
+    var passToggle = document.querySelector(".pass-toggle i");
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        passToggle.classList.remove("fa-eye");
+        passToggle.classList.add("fa-eye-slash");
+    } else {
+        passwordInput.type = "password";
+        passToggle.classList.remove("fa-eye-slash");
+        passToggle.classList.add("fa-eye");
+    }
+}
+</script>
