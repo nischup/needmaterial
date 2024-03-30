@@ -6,9 +6,10 @@
 	<title></title>
 </head>
 <body>
-	<h1> Congratulation </h1> <br> 
+	<img src="https://needmaterials.com/frontend/images/logo/winner-logo.gif">
+	<h1> Congratulation Winner</h1> <br> 
 
-	  <a href="{{ route('frontend.myBids') }}" style="color: #ffffff; text-decoration: none;"> Check My Bid History </a>
+	  <a href="{{ route('frontend.myBids') }}" style="color: #000; text-decoration: none;"> {{ $title }} </a>
 
 	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,

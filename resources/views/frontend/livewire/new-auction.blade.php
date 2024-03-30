@@ -106,7 +106,7 @@
                 {{-- <div class="mb-30" wire:ignore id="neighborhood_div" > --}}
                     <label for="supplier"> {{ __('Target suppliers') }}</label>
                     <select class="form-select pl-3" id="suppliers">
-                            {{-- <option value="">{{ __('Select suppliers') }}</option> --}}
+                            <option value="">{{ __('Select suppliers') }}</option>
                            @foreach($suppliers ?? [] as $supplier)
                             <option value="{{ $supplier->id }}">
                                 {{ $supplier->profile ? ($supplier->profile->company ? $supplier->profile->company->name : $supplier->name) : $supplier->name }}
@@ -230,6 +230,7 @@
                             @error('selectedProducts.'.$key.'.product_title') <span class="text-danger error">{{ $message }}</span> @enderror
                         </div>
                     </div> --}}
+                    
                     <div class="col-md-2">
                         <div class="form-group mb-0">
                             <label>{{ __('Brand') }}:</label>
@@ -580,10 +581,8 @@
         }
         // END MAP RELATED JS
     </script>
-
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('app.google_map_api_key') }}&libraries=places&callback=initialize" async defer></script>
-    
-    <script src="https://cdn.tiny.cloud/1/gkqsnjww1dgzb34lnwm9o8za5nygcm3hrzgtarfeskqdi319/tinymce/6.8.3-22/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6.8.3-22/tinymce.min.js" referrerpolicy="origin"></script>
 
 
     <script>

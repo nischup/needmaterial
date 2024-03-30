@@ -8,6 +8,7 @@ use App\Models\Auction;
 use App\Models\Brand;
 use App\Models\MadeIn;
 use App\Models\Unit;
+use App\Models\User;
 use App\Models\AuctionBidProduct;
 use App\Models\AuctionProduct;
 use App\Models\CatalogueImage;
@@ -83,7 +84,7 @@ class AuctionController extends Controller
 
     public function myAuctionProducts($slug)
     {
-        $auction = Auction::with(['products'])->where('slug', $slug)->first();
+        $auction = Auction::with(['products.bids'])->where('slug', $slug)->first();
 
         return view('frontend.my-auction-products', [
             'auction' => $auction,
@@ -136,7 +137,6 @@ class AuctionController extends Controller
         ]);
 
 
-
         $bid = AuctionBidProduct::with('product.auction')->findOrFail($request->bid_id);
         if ($bid->product->auction->user_id != auth()->user()->id) {
             abort(403);
@@ -162,7 +162,22 @@ class AuctionController extends Controller
                 AuctionBidProduct::where('auction_product_id', $request->auction_product_id)
                     ->update(['product_auto_win_status' => 1]);
 
-                session()->flash('message', __('Winner selection done.'));
+                session()->flash('message', __('Winner selected, we sent a congratulations mail to winner.'));
+
+                $data = array(
+                    'title' => $bidProduct->title,
+                    'price' => $bidProduct->price,
+                );
+                
+                $winner_email = User::where('id', $request->bidder_id)->first()->email;
+                if(!empty($winner_email)){
+                    Mail::send('emails.winner-congratulations', $data, function($message) use ($winner_email) {
+                        $message->to($winner_email)
+                            ->subject('Congratulations, You are winner');
+                    });
+                }
+
+
             } else {
               session()->flash('message', __('Sorry Something went wrong.'));
             }

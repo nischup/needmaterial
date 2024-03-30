@@ -115,7 +115,9 @@
                                                             'id' => $product->id,
                                                             ]) }}"
                                                        class="">
-                                                        {{ __('Show Bids') }}
+                                                        {{ __('Show Bids') }} 
+                                                        <span style="background:red;height: 20px; border-radius: 20px; font-size: 11px;">( {{ $numberOfBids = $product->bids->count(); }} ) 
+                                                        </span>
                                                     </a>
                                                 </td>
                                                 </tr>
