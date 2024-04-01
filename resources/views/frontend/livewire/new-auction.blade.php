@@ -106,7 +106,7 @@
                 {{-- <div class="mb-30" wire:ignore id="neighborhood_div" > --}}
                     <label for="supplier"> {{ __('Target suppliers') }}</label>
                     <select class="form-select pl-3" id="suppliers">
-                            <option value="">{{ __('Select suppliers') }}</option>
+                            {{-- <option value="">{{ __('Select suppliers') }}</option> --}}
                            @foreach($suppliers ?? [] as $supplier)
                             <option value="{{ $supplier->id }}">
                                 {{ $supplier->profile ? ($supplier->profile->company ? $supplier->profile->company->name : $supplier->name) : $supplier->name }}
@@ -214,7 +214,7 @@
                     <div class="col-md-3">
                         <div class="form-group mb-0">
                             <label>{{ __('Type') }}:</label>
-                            <select  wire:model.defer="selectedProducts.{{$key}}.is_exact_item" class="form-control form-control-sm">
+                            <select wire:model.defer="selectedProducts.{{$key}}.is_exact_item" class="form-control form-control-sm" onchange="handleBrandDivVisibility(this.value, {{$key}})">
                                 <option value=""> Select Brand Type </option>
                                 <option value="0">{{ __('Any Brand') }}</option>
                                 <option value="1">{{ __('Exact Brand') }}</option>
@@ -230,19 +230,23 @@
                             @error('selectedProducts.'.$key.'.product_title') <span class="text-danger error">{{ $message }}</span> @enderror
                         </div>
                     </div> --}}
-                    
-                    <div class="col-md-2">
-                        <div class="form-group mb-0">
-                            <label>{{ __('Brand') }}:</label>
-                            <select wire:model.defer="selectedProducts.{{$key}}.brand" class="form-control form-control-sm">
-                                <option value="">{{ __('Select Brand') }}</option>
-                                @foreach($brands as $brand)
-                                    <option value="{{ $brand->id }}">{{ $brand->title }}</option>
-                                @endforeach
-                            </select>
-                            @error('selectedProducts.'.$key.'.brand') <span class="text-danger error">{{ $message }}</span> @enderror
-                        </div>
+             
+
+                  <div class="col-md-2" wire:ignore id="brand_div_{{$key}}" style="display: block">
+                    <div class="form-group mb-0">
+                        <label>{{ __('Brand') }}:</label>
+                        <select wire:model.defer="selectedProducts.{{$key}}.brand" class="form-control form-control-sm">
+                            <option value="">{{ __('Select Brand') }}</option>
+                            @foreach($brands as $brand)
+                                <option value="{{ $brand->id }}">{{ $brand->title }}</option>
+                            @endforeach
+                        </select>
+                        @error('selectedProducts.'.$key.'.brand') <span class="text-danger error">{{ $message }}</span> @enderror
                     </div>
+                </div>
+
+
+
                 </div>
                 <div class="row">
  
@@ -581,8 +585,10 @@
         }
         // END MAP RELATED JS
     </script>
+
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('app.google_map_api_key') }}&libraries=places&callback=initialize" async defer></script>
-    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6.8.3-22/tinymce.min.js" referrerpolicy="origin"></script>
+    
+    <script src="https://cdn.tiny.cloud/1/gkqsnjww1dgzb34lnwm9o8za5nygcm3hrzgtarfeskqdi319/tinymce/6.8.3-22/tinymce.min.js" referrerpolicy="origin"></script>
 
 
     <script>
@@ -681,6 +687,19 @@
             initSelect2();
         });
     </script>
+
+    <script>
+        function handleBrandDivVisibility(selectedValue, key) {
+            var brandDiv = document.getElementById('brand_div_' + key);
+            if (selectedValue == 1) {
+                brandDiv.style.display = 'block';
+            } else {
+                brandDiv.style.display = 'none';
+            }
+        }
+    </script>
+
+
 @endpush
 
 
