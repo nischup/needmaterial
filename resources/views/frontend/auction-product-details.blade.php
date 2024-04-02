@@ -233,9 +233,13 @@
                     <div class="product-sidebar-area">
                         <div class="product-single-sidebar mb-3">
                             <h6 class="title">This Auction Ends in:</h6>
-                            <div class="countdown">
-                                <div id="bid_counter1"></div>
-                            </div>
+                            @if($product->winner_id != NULL && $product->status == 1)
+                                <span class="blinking">Auction Ended</span>
+                            @else
+                                <div class="countdown">
+                                    <div id="bid_counter1"></div>
+                                </div>
+                            @endif
                             <div class="side-counter-area">
                                 <div class="side-counter-item">
                                     <div class="thumb">
@@ -621,4 +625,25 @@
             }))
         })
     </script>
+
+
+    <style>
+    @keyframes blink {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    .blinking {
+        animation: blink 1s infinite;
+        color:red;
+    }
+</style>
+
 @endsection
