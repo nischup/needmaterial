@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Wire Form</title>
+<style>
+  /* CSS for hiding and showing sections */
+  .hidden {
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <!-- Form sections -->
+  <div id="stage1" class="form-stage">
+    <h2>1st Stage: Primary Requirement</h2>
+    <!-- Your primary requirement form fields here -->
+    <button onclick="nextStage()">Next</button>
+  </div>
+
+  <div id="stage2" class="form-stage hidden">
+    <h2>2nd Step: Product Requirement</h2>
+    <!-- Your product requirement form fields here -->
+    <button onclick="prevStage()">Back</button>
+    <button onclick="nextStage()">Next</button>
+  </div>
+
+  <div id="stage3" class="form-stage hidden">
+    <h2>3rd Step: Delivery Details</h2>
+    <!-- Your delivery details form fields here -->
+    <button onclick="prevStage()">Back</button>
+    <button onclick="submitForm()">Submit</button>
+  </div>
+
+  <!-- JavaScript for controlling form stages -->
+  <script>
+    let currentStage = 1;
+    const totalStages = 3;
+
+    function showStage(stageNumber) {
+      document.querySelectorAll('.form-stage').forEach(stage => {
+        stage.classList.add('hidden');
+      });
+      document.getElementById(`stage${stageNumber}`).classList.remove('hidden');
+      currentStage = stageNumber;
+    }
+
+    function nextStage() {
+      if (currentStage < totalStages) {
+        showStage(currentStage + 1);
+      }
+    }
+
+    function prevStage() {
+      if (currentStage > 1) {
+        showStage(currentStage - 1);
+      }
+    }
+
+    function submitForm() {
+      // Code to submit the form
+      alert('Form submitted successfully!');
+    }
+
+    // Show the first stage initially
+    showStage(currentStage);
+  </script>
+</body>
+</html>
