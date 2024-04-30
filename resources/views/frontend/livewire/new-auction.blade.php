@@ -157,17 +157,23 @@
         </div>
 
 
-        <div class="mb-30">
+     {{--    <div class="mb-30">
             <div class="form-group mb-0" wire:ignore>
                 <label for="description_input">{{ __('Auction Description') }}</label>
                 <textarea id="editor" rows="5"></textarea>
             </div>
             @error('description') <span class="text-danger error">{{ $message }}</span>@enderror
-        </div>
+        </div> --}}
 
         <div class="row mb-30">
+             @php $i=1;  @endphp
             @foreach($selectedProducts as $key => $item)
             <div class="auction-product">
+
+                <div class="row">
+                    <span class="badge rounded-pill" style="padding: 8px; margin-left: 6px; background: #ee4730 !important;color: #fff;"> @php echo str_pad($i++, 2, '0', STR_PAD_LEFT);  @endphp </span>
+                </div>
+
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group  mb-0">

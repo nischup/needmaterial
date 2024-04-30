@@ -51,9 +51,15 @@
             <span class="total-bids" style="font-size: 12px;"> {{ __('Lowest Bid') }}: {{ $product->lowest_bid ? $product->lowest_bid : '0' }}</span>
         </div>
         <div class="text-center">
-            <a style="font-size: 12px;" href="{{ route('auction-product', ['slug' => $product->auction->slug, 'catalogue_slug' => $product->catalogue->slug, 'id' => $product->id,]) }}" class="custom-button">
-                {{ __('Bid Now') }}
-            </a>
+            @if ($product->auction->service_type != 3)
+                <a style="font-size: 12px;" href="{{ route('auction-product', ['slug' => $product->auction->slug, 'catalogue_slug' => $product->catalogue->slug, 'id' => $product->id,]) }}" class="custom-button">
+                    {{ __('Bid Now') }}
+                </a>
+                @else
+                <a style="font-size: 12px;" href="{{ route('auction-product', ['slug' => $product->auction->slug, 'catalogue_slug' => $product->catalogue->slug, 'id' => $product->id,]) }}" class="custom-button">
+                    {{ __('Quote Now') }}
+                </a>
+            @endif
         </div>
     </div>
 </div>
