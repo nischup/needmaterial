@@ -43,7 +43,7 @@ class AuctionController extends Controller
         $request->validate([
             'title' => 'required|string|max:191',
             'description' => 'nullable',
-            'brand' => 'required',
+            'brand' => 'nullable',
             'price' => 'required',
             'unit' => 'nullable',
             'made_in' => 'nullable',

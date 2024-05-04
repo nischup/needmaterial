@@ -142,6 +142,7 @@
                                             </div>
                                         </div>
 
+                                        @if($product->auction->service_type !=2 )
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="unit">{{ __('Made in') }}</label>
@@ -156,10 +157,13 @@
                                                 </template>
                                             </div>
                                         </div>
+                                        @endif
 
                                     </div>
                                     <div class="row">
+                                        @if($product->auction->service_type !=2 )
                                         <div class="col-md-6">
+                                             
                                                 <div class="form-group">
                                                 <label for="brand">{{ __('Brand') }}</label>
 
@@ -187,6 +191,7 @@
                                                 </template>
                                             </div>
                                         </div>
+                                        @endif
                                         @if($product->auction->included_delivery_cost == 1)
                                         <div class="col-md-6">
                                             <div class="form-group">
@@ -219,7 +224,7 @@
                                             @elseif ($product->winner_id != null)
                                                 <p  style="color: blue; font-weight:bold;"> This Bid is Closed </p>
                                             @else
-                                                <button type="submit" class="custom-button">  Bid Now </button>
+                                                <button type="submit" class="custom-button" style="width: 150px;height: 50px; font-size: 15px;">  Bid Now </button>
                                         @endif
 
                                     </div>
@@ -276,7 +281,11 @@
                         </div>
 
                         <div class="history-table-area" style="margin-top: 20px;" x-data="live" x-init="init()">
-                            <h5> Live Bid </h5>
+                            
+                            <div x-data="live">
+                                <h5>Live Bid ( <span x-text="count_live_bid"></span> )</h5>
+                            </div>
+
                             <table class="history-table">
                                 <thead>
                                     <tr>
@@ -531,6 +540,7 @@
 
             Alpine.data('live', () => ({
                 live_bids: false,
+                count_live_bid: 0,
                 init() {
                     var vm = this;
                     setInterval(() => {
@@ -541,6 +551,7 @@
                             contentType: false,
                             success: function (data) {
                                 vm.live_bids = data;
+                                vm.count_live_bid = data.length;
                             },
                             error: function (xhr, status, error) {
                                 if(xhr.status === 422) {

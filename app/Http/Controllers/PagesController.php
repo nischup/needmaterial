@@ -33,6 +33,7 @@ class PagesController extends Controller
             ->take(20)
             ->get()->map(function ($product) {
                 $product['lowest_bid'] = $product->bids->min('price');
+                $product['highest_bid'] = $product->bids->max('price');
                 return $product;
             });
 

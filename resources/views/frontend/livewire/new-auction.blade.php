@@ -26,20 +26,20 @@
 
         <div class="mb-30">
             <div class="form-group mb-0">
-                <label for="service_type"> {{ __('Service Type') }}</label>
+                <label for="service_type">{{ __('Service Type') }}</label>
                 <select class="form-select form-control-sm" wire:model.defer="service_type" id="service_type">
                     <option value="">Select Service Type</option>
                     <option value="{{ \App\Models\Auction::BUYING_SERVICE }}">BUYING</option>
                     @if(auth()->user()->hasRole('supplier'))
-                        <option value="{{ \App\Models\Auction::SELLING_SERVICE }}" selected>SELLING</option>
+                        <option value="{{ \App\Models\Auction::SELLING_SERVICE }}">SELLING</option>
                     @endif
-                    <option value="{{ \App\Models\Auction::QUOTATION_SERVICE }}" selected>QUOTATION</option>
+                    <option value="{{ \App\Models\Auction::QUOTATION_SERVICE }}">QUOTATION</option>
                 </select>
             </div>
             @error('service_type') <span class="text-danger error">{{ $message }}</span>@enderror
         </div>
 
-        <div class="row mb-20">
+        <div class="row mb-20" >
             <div class="col-md-6">
                 <div class="form-group mb-0">
                     <input class="form-check-input" name="is_open_bid" type="radio" wire:model.defer="is_open_bid" value="1" id="is_open_bid" style="height: auto">
@@ -48,10 +48,12 @@
                 @error('is_open_bid') <span class="text-danger error">{{ $message }}</span>@enderror
             </div>
             <div class="col-md-6">
-                <div class="form-group mb-0">
+                @if($service_type != 2)
+                <div class="form-group mb-0" id="bid_options">
                     <input class="form-check-input" name="is_open_bid" type="radio" wire:model.defer="is_open_bid" value="0" id="closed_bid" style="height: auto">
                     <label class="form-check-label" for="closed_bid">Close Bid</label>
                 </div>
+                @endif
                 @error('is_open_bid') <span class="text-danger error">{{ $message }}</span>@enderror
             </div>
         </div>
@@ -695,6 +697,7 @@
     </script>
 
     <script>
+
         function handleBrandDivVisibility(selectedValue, key) {
             var brandDiv = document.getElementById('brand_div_' + key);
             if (selectedValue == 1) {
@@ -703,6 +706,24 @@
                 brandDiv.style.display = 'none';
             }
         }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const serviceTypeSelect = document.getElementById('service_type');
+            const bidOptionsDiv = document.getElementById('bid_options');
+
+            serviceTypeSelect.addEventListener('change', function() {
+                const selectedServiceType = this.value;
+
+                // If "SELLING" service type is selected, hide the "Close Bid" option
+                if (selectedServiceType === "{{ \App\Models\Auction::SELLING_SERVICE }}") {
+                    bidOptionsDiv.style.display = 'none';
+                } else {
+                    bidOptionsDiv.style.display = 'block';
+                }
+            });
+        });
+
     </script>
 
 

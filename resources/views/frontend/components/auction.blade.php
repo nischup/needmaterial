@@ -48,7 +48,12 @@
                 <div id="countdown_timer_{{ $product->id }}"></div>
             </div>
             <span class="total-bids" style="font-size: 12px;">{{ $product->bids_count }}  {{ __('Bids') }} </span>
-            <span class="total-bids" style="font-size: 12px;"> {{ __('Lowest Bid') }}: {{ $product->lowest_bid ? $product->lowest_bid : '0' }}</span>
+            @if ($product->auction->service_type == 1)
+                <span class="total-bids" style="font-size: 12px;"> {{ __('Lowest Bid') }}: {{ $product->lowest_bid ? $product->lowest_bid : '0' }}</span>
+            @endif  
+            @if ($product->auction->service_type == 2)
+                <span class="total-bids" style="font-size: 12px;"> {{ __('Highest Bid') }}: {{ $product->highest_bid ? $product->highest_bid : '0' }}</span>
+            @endif
         </div>
         <div class="text-center">
             @if ($product->auction->service_type != 3)
