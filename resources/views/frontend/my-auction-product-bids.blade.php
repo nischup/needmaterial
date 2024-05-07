@@ -127,7 +127,10 @@
                                                         <input type="hidden" name="bid_id" value="{{ $bid->id }}">
                                                         <input type="hidden" name="bidder_id" value="{{ $bid->bidder->id }}">
                                                         <input type="hidden" name="bid_price" value="{{ round($bid->price,2) }}">
+                                                        @if($product->auction['service_type'] == 1 || $product->auction['service_type'] == 2)
                                                         <button type="submit" class="custom-button btn-xs">Make Winner</button>
+                                                        @endif
+                                                    
                                                     </form>
                                                     @endif
                                                 </td>

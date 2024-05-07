@@ -224,7 +224,13 @@
                                             @elseif ($product->winner_id != null)
                                                 <p  style="color: blue; font-weight:bold;"> This Bid is Closed </p>
                                             @else
+
+                                            @if ($product->auction->service_type == 1 || $product->auction->service_type == 2)
                                                 <button type="submit" class="custom-button" style="width: 150px;height: 50px; font-size: 15px;">  Bid Now </button>
+                                            @else
+                                             <button type="submit" class="custom-button" style="width: 150px;height: 50px; font-size: 15px;">  Quote Now </button>
+                                            @endif
+
                                         @endif
 
                                     </div>
