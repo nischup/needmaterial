@@ -577,6 +577,8 @@
             }
         }
 
+        
+
         function handleLocationError(browserHasGeolocation, infoWindow, pos) {
             console.log(pos);
             browserHasGeolocation ? console.log('Error: The Geolocation service failed.') : console.log('Error: Your browser doesn\'t support geolocation.');
