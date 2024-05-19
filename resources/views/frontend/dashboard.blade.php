@@ -18,9 +18,7 @@
                 <div class="col-lg-9">
                     <div class="dashboard-widget mb-40">
                         <div class="dashboard-title mb-30">
-                            <h5 class="title">My Activity (<small style="color:green;"> Login as a {{ auth()->user()->user_type == 1 ? "Customer" : "Supplier" }} </small>)</h5>
-                            
-                     
+                            <h5 class="title">My Activity (<small style="color:green;"> Login as a {{ auth()->user()->user_type == 1 ? "Customer" : "Supplier" }} </small>) <a style="margin-left: 25%; color: #fff;" href="{{ route('frontend.newAuction') }}" class="btn custom-button"> Create New Auction </a> </h5>
                         </div>
                         <div class="row justify-content-center mb-30-none">
                             <div class="col-md-4 col-sm-6">
