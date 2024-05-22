@@ -33,7 +33,7 @@ class NewAuction extends Component
     public $cities = [];
     public $neighbourhoodies = [];
     public $title, $featured, $description, $product_title, $brand, $unit, $is_exact_item, $delivery_address, $lat, $long, $start_time, $end_time;
-    public $delivery_cost_included, $vat, $delivery_date;
+    public $delivery_cost_included, $delivery_time, $vat, $delivery_date;
     public $service_type, $is_open_bid = 1;
     public $products = [];
     public $catalogues = [];
@@ -90,6 +90,7 @@ class NewAuction extends Component
             'start_time' => 'required',
             'end_time' => 'required',
             'delivery_date' => 'nullable|date',
+            'delivery_time' => 'nullable',
 
             'selectedProducts.*.catalogue' => 'required|numeric',
             'selectedProducts.*.quantity' => 'required|numeric',
@@ -128,6 +129,7 @@ class NewAuction extends Component
                 'start_time' => $this->start_time,
                 'end_time' => $this->end_time,
                 'included_delivery_cost' => $this->delivery_cost_included ? 1 : 0,
+                'delivery_time' => $this->delivery_time,
                 'vat' => $this->vat ? 1 : 0,
                 'delivery_date' => $this->delivery_date
             ]);

@@ -394,18 +394,35 @@
         </div>
 
         <div class="row mb-30">
-            <div class="col-md-6">
+
+            <div class="col-md-4">
+                <div class="form-group mb-0">
+                    <label for="delivery_time"> {{ __('Delivery Time Period') }}</label>
+                    <select id="delivery_time" class="form-control" wire:model.defer="delivery_time">
+                        <option >{{ __('Select One') }}</option>
+                        <option value="Morning">{{ __('Morning') }}</option>
+                        <option value="Afternoon">{{ __('Afternoon') }}</option>
+                        <option value="Evening">{{ __('Evening') }}</option>
+                        <option value="Night">{{ __('Night') }}</option>
+                    </select>
+                     @error('delivery_time') <span class="text-danger error">{{ $message }}</span>@enderror
+                </div>
+            </div>            
+
+            <div class="col-md-4">
                 <div class="form-group mb-0">
                     <input class="form-check-input" type="checkbox" wire:model.defer="delivery_cost_included" style="height: auto" id="delivery_cost_included"><label>{{ __('With Delivery Charge') }}</label>
                     @error('delivery_cost_included') <span class="text-danger error">{{ $message }}</span>@enderror
                 </div>
             </div>
-            <div class="col-md-6">
+
+            <div class="col-md-4">
                 <div class="form-group mb-0">
                     <input class="form-check-input" type="checkbox" wire:model.defer="vat" style="height: auto" id="vat"><label>{{ __('With VAT') }}</label>
                     @error('vat') <span class="text-danger error">{{ $message }}</span>@enderror
                 </div>
             </div>
+
         </div>
         <div class="form-group mb-0">
 
