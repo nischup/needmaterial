@@ -24,185 +24,6 @@
             </div>
         @endif
 
-
-        <div class="row mb-30">
-            @php $i=1;  @endphp
-            @foreach($selectedProducts as $key => $item)
-            <div class="auction-product">
-
-                <div class="row">
-                    @if(count($selectedProducts) > 1)
-                    <span class="badge rounded-pill" style="padding: 8px; margin-left: 6px; background: #ee4730 !important;color: #fff;"> @php echo str_pad($i++, 2, '0', STR_PAD_LEFT);  @endphp </span>
-                     @endif
-                </div>
-
-                <div class="row">
-                    <div class="col-md-2">
-                        <div class="form-group  mb-0">
-                            <label>{{ __('Category') }}:</label>
-                            <select wire:model.defer="selectedProducts.{{$key}}.p_category" wire:change="p_categoryChanged($event.target.value,{{$key}})" class="form-control form-control-sm">
-                                <option value="">{{ __('Select Category') }}</option>
-                                @foreach($categories as $item)
-                                    <option value="{{ $item['id'] }}">{{ $item[$category_column] ? $item[$category_column] : $item['name_en'] }}</option>
-                                @endforeach
-                            </select>
-                            @error('selectedProducts.'.$key.'.p_category') <span class="text-danger error">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group mb-0">
-                            <label>{{ __('Sub Category') }}:</label>
-                            <select wire:model.defer="selectedProducts.{{$key}}.category" wire:change="categoryChanged($event.target.value,{{$key}})" class="form-control form-control-sm">
-                                <option value="">{{ __('Select Sub Category') }}</option>
-                                @if($child_categories && isset($child_categories[$key]))
-                                    @foreach($child_categories[$key] as $child_category)
-                                        <option value="{{ $child_category['id'] }}">{{ $child_category[$category_column] ? $child_category[$category_column] : $child_category['name_en'] }}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                            @error('selectedProducts.'.$key.'.category') <span class="text-danger error">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group mb-0">
-                            <label>{{ __('Catalogue') }}:</label>
-                            <select wire:model.defer="selectedProducts.{{$key}}.catalogue" wire:change="catalogueChanged($event.target.value,{{$key}})" class="form-control form-control-sm">
-                                <option value="">{{ __('Select Catalog Product') }}</option>
-                                @if($catalogues && isset($catalogues[$key]))
-                                    @foreach($catalogues[$key] as $catalogue)
-                                        @if($catalogue)
-                                            <option value="{{ $catalogue['id'] }}">{{ $catalogue['title'] }}</option>
-                                        @endif
-                                    @endforeach
-                                @endif
-                            </select>
-                            @error('selectedProducts.'.$key.'.catalogue') <span class="text-danger error">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group mb-0">
-                            <label>{{ __('Type') }}:</label>
-                            <select wire:model.defer="selectedProducts.{{$key}}.is_exact_item" class="form-control form-control-sm" onchange="handleBrandDivVisibility(this.value, {{$key}})">
-                                <option value=""> Select Brand Type </option>
-                                <option value="0">{{ __('Any Brand') }}</option>
-                                <option value="1">{{ __('Exact Brand') }}</option>
-                            </select>
-                            @error('selectedProducts.'.$key.'.is_exact_item') <span class="text-danger error">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-
-            {{--         <div class="col-md-3">
-                        <label>{{ __('Title') }}:</label>
-                        <div class="form-group">
-                            <input type="text" wire:model.defer="selectedProducts.{{$key}}.product_title" class="form-control form-control-sm" placeholder="Title">
-                            @error('selectedProducts.'.$key.'.product_title') <span class="text-danger error">{{ $message }}</span> @enderror
-                        </div>
-                    </div> --}}
-             
-
-                  <div class="col-md-2" wire:ignore id="brand_div_{{$key}}" style="display: block">
-                    <div class="form-group mb-0">
-                        <label>{{ __('Brand') }}:</label>
-                        <select wire:model.defer="selectedProducts.{{$key}}.brand" class="form-control form-control-sm">
-                            <option value="">{{ __('Select Brand') }}</option>
-                            @foreach($brands as $brand)
-                                <option value="{{ $brand->id }}">{{ $brand->title }}</option>
-                            @endforeach
-                        </select>
-                        @error('selectedProducts.'.$key.'.brand') <span class="text-danger error">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-
-                </div>
-                
-                <div class="row">
- 
-                    <div class="col-md-2">
-                        <div class="form-group mb-0">
-                            <label>{{ __('Unit') }}:</label>
-                            <select wire:model.defer="selectedProducts.{{$key}}.unit" class="form-control form-control-sm">
-                                <option value="">{{ __('Select unit') }}</option>
-                                @foreach($units as $unit)
-                                    <option value="{{ $unit->id }}">{{ $unit->title }}</option>
-                                @endforeach
-                            </select>
-                            @error('selectedProducts.'.$key.'.unit') <span class="text-danger error">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group mb-0">
-                            <label>{{ __('Made In') }}:</label>
-                            <select wire:model.defer="selectedProducts.{{$key}}.made_in" class="form-control form-control-sm">
-                                <option value=""> Select Made In </option>
-                                @foreach($made_in as $made_data)
-                                    <option value="{{ $made_data->id }}">{{ $made_data->name }}</option>
-                                @endforeach
-                            </select>
-
-                            @error('selectedProducts.'.$key.'.made_in') <span class="text-danger error">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group mb-0">
-                            <label>{{ __('Quantity') }}:</label>
-                            <input type="number" wire:model.defer="selectedProducts.{{$key}}.quantity" class="form-control form-control-sm" placeholder="Quantity">
-                            @error('selectedProducts.'.$key.'.quantity') <span class="text-danger error">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group mb-0">
-                            <label>{{ __('Description') }}:</label>
-                            <textarea class="form-control" wire:model.defer="selectedProducts.{{$key}}.description"></textarea>
-                            @error('delivery_date') <span class="text-danger error">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-11">
-                        <div class="form-group mb-0">
-                            <label>{{ __('Images') }}:</label>
-                            <div class="row">
-                                @if($selectedProducts[$key]['images'])
-                                    <div class="col-md-12">
-                                        @foreach($selectedProducts[$key]['images'] as $imageKey => $image)
-                                            <img src="{{ isset($image['src']) ? $image['src'] : asset('storage/' . $image['src_original']) }}" width="70px" alt="">
-                                            <a href="#" wire:click.prevent="imageDelete({{$key}},{{ $imageKey }})" style="color: red">X</a>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="row pb-2">
-                                <div class="col-md-10">
-                                    <input type="file" accept="image/*" multiple id="images" wire:model="productNewImages">
-                                </div>
-                                <div class="col-md-2">
-                                    <button wire:click.prevent="catalogueImageManageDone({{$key}})" type="button">Attach images</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-1">
-                        <div class="form-group mb-0">
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-sm" wire:click="removeProduct({{$key}})"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
-
-        @error('products') <span class="text-danger error">{{ $message }}</span>@enderror
-
-        <div class="mb-30" style="width: unset; text-align: right">
-            <button type="button" data-toggle="modal"
-                    wire:click="addRow"
-                    class="btn btn-primary btn-sm"
-                    style="height: unset; width: unset; background: #ee4730 !important;"
-            >{{ __('Add Products') }}</button>
-        </div>
-
         <div class="mb-30">
             <div class="form-group mb-0">
                 <label for="service_type">{{ __('Service Type') }}</label>
@@ -346,30 +167,189 @@
             @error('description') <span class="text-danger error">{{ $message }}</span>@enderror
         </div> --}}
 
+        <div class="row mb-30">
+             @php $i=1;  @endphp
+            @foreach($selectedProducts as $key => $item)
+            <div class="auction-product">
 
-        <div class="mb-30" wire:ignore>
-            <div class="row">
-                <div class="col-md-10">
+                <div class="row">
+                    <span class="badge rounded-pill" style="padding: 8px; margin-left: 6px; background: #ee4730 !important;color: #fff;"> @php echo str_pad($i++, 2, '0', STR_PAD_LEFT);  @endphp </span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group  mb-0">
+                            <label>{{ __('Category') }}:</label>
+                            <select wire:model.defer="selectedProducts.{{$key}}.p_category" wire:change="p_categoryChanged($event.target.value,{{$key}})" class="form-control form-control-sm">
+                                <option value="">{{ __('Select Category') }}</option>
+                                @foreach($categories as $item)
+                                    <option value="{{ $item['id'] }}">{{ $item[$category_column] ? $item[$category_column] : $item['name_en'] }}</option>
+                                @endforeach
+                            </select>
+                            @error('selectedProducts.'.$key.'.p_category') <span class="text-danger error">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group mb-0">
+                            <label>{{ __('Sub Category') }}:</label>
+                            <select wire:model.defer="selectedProducts.{{$key}}.category" wire:change="categoryChanged($event.target.value,{{$key}})" class="form-control form-control-sm">
+                                <option value="">{{ __('Select Sub Category') }}</option>
+                                @if($child_categories && isset($child_categories[$key]))
+                                    @foreach($child_categories[$key] as $child_category)
+                                        <option value="{{ $child_category['id'] }}">{{ $child_category[$category_column] ? $child_category[$category_column] : $child_category['name_en'] }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                            @error('selectedProducts.'.$key.'.category') <span class="text-danger error">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group mb-0">
+                            <label>{{ __('Catalogue') }}:</label>
+                            <select wire:model.defer="selectedProducts.{{$key}}.catalogue" wire:change="catalogueChanged($event.target.value,{{$key}})" class="form-control form-control-sm">
+                                <option value="">{{ __('Select Catalog Product') }}</option>
+                                @if($catalogues && isset($catalogues[$key]))
+                                    @foreach($catalogues[$key] as $catalogue)
+                                        @if($catalogue)
+                                            <option value="{{ $catalogue['id'] }}">{{ $catalogue['title'] }}</option>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </select>
+                            @error('selectedProducts.'.$key.'.catalogue') <span class="text-danger error">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group mb-0">
+                            <label>{{ __('Type') }}:</label>
+                            <select wire:model.defer="selectedProducts.{{$key}}.is_exact_item" class="form-control form-control-sm" onchange="handleBrandDivVisibility(this.value, {{$key}})">
+                                <option value=""> Select Brand Type </option>
+                                <option value="0">{{ __('Any Brand') }}</option>
+                                <option value="1">{{ __('Exact Brand') }}</option>
+                            </select>
+                            @error('selectedProducts.'.$key.'.is_exact_item') <span class="text-danger error">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+
+            {{--         <div class="col-md-3">
+                        <label>{{ __('Title') }}:</label>
+                        <div class="form-group">
+                            <input type="text" wire:model.defer="selectedProducts.{{$key}}.product_title" class="form-control form-control-sm" placeholder="Title">
+                            @error('selectedProducts.'.$key.'.product_title') <span class="text-danger error">{{ $message }}</span> @enderror
+                        </div>
+                    </div> --}}
+             
+
+                  <div class="col-md-2" wire:ignore id="brand_div_{{$key}}" style="display: block">
                     <div class="form-group mb-0">
-                        <label for="address-input">{{ __('Delivery Address') }}:</label>
-                        <input type="text" class="map-input" placeholder="{{ __('Delivery Address') }}" id="address-input">
-                        @error('delivery_address') <span class="text-danger error">{{ $message }}</span>@enderror
+                        <label>{{ __('Brand') }}:</label>
+                        <select wire:model.defer="selectedProducts.{{$key}}.brand" class="form-control form-control-sm">
+                            <option value="">{{ __('Select Brand') }}</option>
+                            @foreach($brands as $brand)
+                                <option value="{{ $brand->id }}">{{ $brand->title }}</option>
+                            @endforeach
+                        </select>
+                        @error('selectedProducts.'.$key.'.brand') <span class="text-danger error">{{ $message }}</span> @enderror
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <label for="address-input" style="opacity: 0;"> . </label> <br>
-                    <span id="gglmapbtn"  class="btn btn-primary btn-sm"
-                    style=" background: #ee4730 !important;"> Show Map </span>
+
+
+
+                </div>
+                <div class="row">
+ 
+                    <div class="col-md-2">
+                        <div class="form-group mb-0">
+                            <label>{{ __('Unit') }}:</label>
+                            <select wire:model.defer="selectedProducts.{{$key}}.unit" class="form-control form-control-sm">
+                                <option value="">{{ __('Select unit') }}</option>
+                                @foreach($units as $unit)
+                                    <option value="{{ $unit->id }}">{{ $unit->title }}</option>
+                                @endforeach
+                            </select>
+                            @error('selectedProducts.'.$key.'.unit') <span class="text-danger error">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group mb-0">
+                            <label>{{ __('Made In') }}:</label>
+                            <select wire:model.defer="selectedProducts.{{$key}}.made_in" class="form-control form-control-sm">
+                                <option value=""> Select Made In </option>
+                                @foreach($made_in as $made_data)
+                                    <option value="{{ $made_data->id }}">{{ $made_data->name }}</option>
+                                @endforeach
+                            </select>
+
+                            @error('selectedProducts.'.$key.'.made_in') <span class="text-danger error">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group mb-0">
+                            <label>{{ __('Quantity') }}:</label>
+                            <input type="number" wire:model.defer="selectedProducts.{{$key}}.quantity" class="form-control form-control-sm" placeholder="Quantity">
+                            @error('selectedProducts.'.$key.'.quantity') <span class="text-danger error">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-0">
+                            <label>{{ __('Description') }}:</label>
+                            <textarea class="form-control" wire:model.defer="selectedProducts.{{$key}}.description"></textarea>
+                            @error('delivery_date') <span class="text-danger error">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="form-group mb-0">
+                            <label>{{ __('Images') }}:</label>
+                            <div class="row">
+                                @if($selectedProducts[$key]['images'])
+                                    <div class="col-md-12">
+                                        @foreach($selectedProducts[$key]['images'] as $imageKey => $image)
+                                            <img src="{{ isset($image['src']) ? $image['src'] : asset('storage/' . $image['src_original']) }}" width="70px" alt="">
+                                            <a href="#" wire:click.prevent="imageDelete({{$key}},{{ $imageKey }})" style="color: red">X</a>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="row pb-2">
+                                <div class="col-md-10">
+                                    <input type="file" accept="image/*" multiple id="images" wire:model="productNewImages">
+                                </div>
+                                <div class="col-md-2">
+                                    <button wire:click.prevent="catalogueImageManageDone({{$key}})" type="button">Attach images</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group mb-0">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-sm" wire:click="removeProduct({{$key}})"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>        
+            @endforeach
+        </div>
 
-        <div id="map-container-div" class="mb-30" wire:ignore  style="display:none;">
+        @error('products') <span class="text-danger error">{{ $message }}</span>@enderror
+
+        <div class="mb-30" style="width: unset; text-align: right">
+            <button type="button" data-toggle="modal"
+                    wire:click="addRow"
+                    class="btn btn-primary btn-sm"
+                    style="height: unset; width: unset; background: #ee4730 !important;"
+            >{{ __('Add Products') }}</button>
+        </div>
+
+        <div class="mb-30" wire:ignore>
             <div class="form-group mb-0">
-    {{--             <label for="address-input">{{ __('Delivery Address') }}:</label>
-                <input type="text" class="map-input" placeholder="{{ __('Delivery Address') }}" id="address-input"> --}}
+                <label for="address-input">{{ __('Delivery Address') }}:</label>
+                <input type="text" class="map-input" placeholder="{{ __('Delivery Address') }}" id="address-input">
                 @error('delivery_address') <span class="text-danger error">{{ $message }}</span>@enderror
-                <div id="address-map-container" style="width:100%;height:300px;" class="pt-2">
+                <div id="address-map-container" style="width:100%;height:400px;" class="pt-2">
                     <div style="width: 100%; height: 100%" id="address-map"></div>
                 </div>
             </div>
@@ -378,14 +358,14 @@
         <input type="hidden" wire:model.lazy="delivery_address" id="address" value="" />
         <input type="hidden" wire:model.lazy="lat" id="address-latitude" value="0" />
         <input type="hidden" wire:model.lazy="long" id="address-longitude" value="0" />
-{{-- 
+
         <div class="mb-30">
             <div class="form-group mb-0">
                 <label for="comment">{{ __('Comment') }}:</label>
                 <textarea placeholder="{{ __('Comment') }}" wire:model.defer="comment" rows="2" style="height: unset"></textarea>
                 @error('comment') <span class="text-danger error">{{ $message }}</span>@enderror
             </div>
-        </div> --}}
+        </div>
 
         <div class="row mb-30">
             <div class="col-md-4">
@@ -420,10 +400,10 @@
                     <label for="delivery_time"> {{ __('Delivery Time Period') }}</label>
                     <select id="delivery_time" class="form-control" wire:model.defer="delivery_time">
                         <option >{{ __('Select One') }}</option>
-                        <option value="1">{{ __('09 AM - 12 AM') }}</option>
-                        <option value="2">{{ __('12 PM - 03 PM') }}</option>
-                        <option value="3">{{ __('03 PM - 06 PM') }}</option>
-                        <option value="4">{{ __('06 PM - 09 PM') }}</option>
+                        <option value="Morning">{{ __('Morning') }}</option>
+                        <option value="Afternoon">{{ __('Afternoon') }}</option>
+                        <option value="Evening">{{ __('Evening') }}</option>
+                        <option value="Night">{{ __('Night') }}</option>
                     </select>
                      @error('delivery_time') <span class="text-danger error">{{ $message }}</span>@enderror
                 </div>
@@ -432,16 +412,13 @@
             <div class="col-md-4">
                 <div class="form-group mb-0">
                     <input class="form-check-input" type="checkbox" wire:model.defer="delivery_cost_included" style="height: auto" id="delivery_cost_included"><label>{{ __('With Delivery Charge') }}</label>
-
                     @error('delivery_cost_included') <span class="text-danger error">{{ $message }}</span>@enderror
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="form-group mb-0">
-
                     <input class="form-check-input" type="checkbox" wire:model.defer="vat" style="height: auto" id="vat"><label>{{ __('With VAT') }}</label>
-
                     @error('vat') <span class="text-danger error">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -463,13 +440,13 @@
             </div>            
 
             <div class="col-md-4">
-                {{-- @if($payment_type == 'Credit') --}}
-                    <div class="form-group mb-0" id="CD_options" style="display:none;">
+                @if($payment_type == 'Credit')
+                    <div class="form-group mb-0">
                     <label>{{ __('Credit Days') }}</label> <br>
                         <input class="form-control" type="number" wire:model.defer="credit_days" style="height: auto" id="credit_days">
                         @error('credit_days') <span class="text-danger error">{{ $message }}</span>@enderror
                     </div>
-                {{-- @endif --}}
+                @endif
             </div>
 
             <div class="col-md-4">
@@ -797,40 +774,6 @@
                 }
             });
         });
-
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const paymentTypeSelect = document.getElementById('payment_type');
-            const cdDiv = document.getElementById('CD_options');
-
-            paymentTypeSelect.addEventListener('change', function() {
-                const selectedPaymentType = this.value;
-                // console.log('Payment Type Selected:', selectedPaymentType);
-
-                // If "Cash" payment type is selected, hide the "Credit Days" input
-                if (selectedPaymentType === "Cash") {
-                    cdDiv.style.display = 'none';
-                } else if (selectedPaymentType === "Credit") {
-                    cdDiv.style.display = 'block';
-                } else {
-                    cdDiv.style.display = 'none';
-                }
-            });
-        });
-
-
- document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('gglmapbtn').addEventListener('click', function() {
-            var mapContainer = document.getElementById('map-container-div');
-            if (mapContainer.style.display === 'none' || mapContainer.style.display === '') {
-                mapContainer.style.display = 'block';
-                this.textContent = 'Hide Map';
-            } else {
-                mapContainer.style.display = 'none';
-                this.textContent = 'Show Map';
-            }
-        });
-    });
 
     </script>
 

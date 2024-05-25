@@ -17,7 +17,7 @@
                 <div class="col-lg-8">
                     <div class="dash-bid-item dashboard-widget mb-40-60">
                         <div class="header">
-                            <h4 class="title">Closed Auctions List</h4>
+                            <h4 class="title">Closed Auctions List ( <a style="color: #ee4730;text-decoration: underline;" href="{{ route('frontend.newAuction') }}" > New Auction </a> )</h4>
                         </div>
                             <div class="tab-content">
                                 <div class="tab-pane show active fade" id="current">

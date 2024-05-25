@@ -21,7 +21,6 @@ use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Twilio\Rest\Client;
-use Carbon\Carbon;
 use App\Mail\BidSubmissionSuccessful;
 use Illuminate\Support\Facades\Mail;
 
@@ -92,9 +91,7 @@ class NewAuction extends Component
             'end_time' => 'required',
             'delivery_date' => 'nullable|date',
             'delivery_time' => 'nullable',
-            'payment_type' => 'required',
-            'credit_days' => 'required_if:payment_type,Credit',
-            // 'credit_days' => 'required_if:payment_type,Credit|integer|min:1',
+            'payment_type' => 'nullable',
 
             'selectedProducts.*.catalogue' => 'required|numeric',
             'selectedProducts.*.quantity' => 'required|numeric',
@@ -341,12 +338,6 @@ class NewAuction extends Component
            ->whereHas('roles', function($q){
                $q->where("name", User::SUPPLIER_ROLE_NAME);
            })->get();
-
-
-        $this->addRow(); // Add the initial product row
-        $this->start_time = Carbon::now()->format('Y-m-d\TH:i');   // Set default value to the current date and time
-        $this->end_time = Carbon::now()->addDays(3)->format('Y-m-d\TH:i');   // Set default value to the 3 days later end date and time
-
     }
 
     public function addRow()
