@@ -182,6 +182,23 @@
                                         <option value="{{ $item['id'] }}">{{ $item[$category_column] ? $item[$category_column] : $item['name_en'] }}</option>
                                     @endforeach
                                 </select>
+
+                                @if ($cat_dtls != null)
+                                 <?php
+                                    $cat_dtls = '';
+                                        foreach ($cat as $cat_data)
+                                        {
+                                            if($cat_dtls != '')
+                                            {
+                                                $cat_dtls .= ', ';
+                                            }
+                                            $cat_dtls .= $cat_data->name_en;
+                                        }
+                                    ?>
+                                    <span> {{ $cat_dtls }}</span>
+
+                                @endif
+
                                 @error('selectedCat') <span class="text-danger error">{{ $message }}</span>@enderror
 
                         </div>

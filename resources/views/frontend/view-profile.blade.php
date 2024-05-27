@@ -71,6 +71,7 @@
                                             <div class="info-name"> {{ __('Category') }} </div>
                                             <div class="info-value">
                                                 <?php
+                                                $cat = Category::whereIn('id', $categories)->get();
                                                     $cat_dtls = '';
                                                     foreach ($cat as $cat_data)
                                                     {
