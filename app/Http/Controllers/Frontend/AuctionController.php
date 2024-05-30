@@ -201,6 +201,27 @@ class AuctionController extends Controller
         return redirect()->back();
     }
 
+
+    public function setAuctionBidAcceptStatusUpdate(Request $request)
+    {
+
+         AuctionBidProduct::where('id', $request->auction_product_id)->update(['confirmation_status' => $request->status]);
+
+        session()->flash('message', __('You Accept this Bid.'));
+
+        return redirect()->back();
+    }    
+
+    public function setAuctionBidRejectStatusUpdate(Request $request)
+    {
+
+         AuctionBidProduct::where('id', $request->auction_product_id)->update(['confirmation_status' => $request->status]);
+
+        session()->flash('message', __('You Reject this Bid.'));
+
+        return redirect()->back();
+    }
+
     public function myAuctionEdit($id)
     {
         $auction = Auction::find($id);

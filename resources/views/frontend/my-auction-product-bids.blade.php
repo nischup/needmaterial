@@ -63,7 +63,15 @@
                                                 </td>
                                                 <td style="width: 40%">
                                                     @if($bid->bidder->id == $product->winner_id && $bid->winner_status == 1)
-                                                        <span class="badge badge-info">{{ $bid->bidder->name }} ({{ __('Winner') }})</span>
+                                                        <span class="badge badge-info">{{ $bid->bidder->name }} ({{ __('Winner') }})</span> <br>
+
+                                                        @if($bid->confirmation_status == 200)
+                                                         <span class="badge badge-success">{{ __('Accepted') }}</span>
+                                                         @endif 
+                                                         @if($bid->confirmation_status == 400)
+                                                         <span class="badge badge-danger">{{ __('Rejected') }}</span>
+                                                         @endif
+
                                                     @else
                                                         {{ $bid->bidder->name }}
                                                     @endif

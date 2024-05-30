@@ -130,7 +130,13 @@ Route::middleware(['auth', 'profile_status'])->group(function () {
             Route::get('/my-auctions/{status?}', [PagesController::class, 'myAuctions'])->name('frontend.my-auctions');
             Route::get('/my-auctions/{id}/edit', [AuctionController::class, 'myAuctionEdit'])->name('frontend.edit-auction');
             Route::post('/my-auctions/mark-winner', [AuctionController::class, 'setAuctionBidWinner'])->name('set-auction-bid-winner');
-            Route::post('/my-auctions/mark-winner-status-update', [AuctionController::class, 'setAuctionBidStatusUpdate'])->name('set-auction-bid-status-update');
+
+            Route::post('/my-auctions/mark-winner-status-update', [AuctionController::class, 'setAuctionBidStatusUpdate'])->name('set-auction-bid-status-update'); 
+
+            Route::post('/my-auctions/winner-accept-bid-status-update', [AuctionController::class, 'setAuctionBidAcceptStatusUpdate'])->name('set-winner-accept-bid-status-update');  
+
+            Route::post('/my-auctions/winner-reject-bid-status-update', [AuctionController::class, 'setAuctionBidRejectStatusUpdate'])->name('set-winner-reject-bid-status-update');
+
             Route::get('/new-auction', [PagesController::class, 'newAuction'])->name('frontend.newAuction');
             Route::get('/new-quotation', [PagesController::class, 'newQuotation'])->name('frontend.newQuotation');
             Route::get('/my-bid', [PagesController::class, 'myBids'])->name('frontend.myBids');
