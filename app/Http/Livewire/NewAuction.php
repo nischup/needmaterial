@@ -29,7 +29,7 @@ class NewAuction extends Component
 {
     use WithFileUploads;
 
-    public $category_column, $category;
+    public $category_column, $category, $neighbour_column;
     public $child_categories = [];
     public $cities = [];
     public $neighbourhoodies = [];
@@ -86,7 +86,7 @@ class NewAuction extends Component
     {
         $this->validate([
             'service_type' => 'required',
-            'title' => 'required|unique:auctions,title',
+            'title' => 'nullable|unique:auctions,title',
             'description' => 'nullable',
             'start_time' => 'required',
             'end_time' => 'required',
@@ -118,13 +118,31 @@ class NewAuction extends Component
         DB::beginTransaction();
 
         try {
+
+            // auto generated title
+            $allTitles = [];
+            foreach ($this->selectedProducts as $selectedProduct) {
+            $product = Catalogue::where('id', $selectedProduct['catalogue'])->first();
+            $product_title = $product ? $product->title : null;
+                if ($product_title) {
+                    $randomNumber = rand(1000, 9999); // Adjust the range as needed
+                    $allTitles[] = $product_title;
+                }
+            }
+
+            $concatenatedTitles = implode(', ', $allTitles).'-'.date('Y-m-d').'-'.$randomNumber;
+            // auto generated title end
+
+
             $auction = Auction::create([
                 'user_id' => auth()->user()->id,
                 'service_type' => $this->service_type,
                 'is_open_bid' => $this->is_open_bid,
-                'title' => $this->title,
+                // 'title' => $this->title,
+                'title' => $concatenatedTitles,
                 'featured' => $this->featured,
-                'slug' => Str::slug($this->title),
+                // 'slug' => Str::slug($this->title),
+                'slug' => Str::slug($concatenatedTitles),
                 'description' => $this->description,
                 'delivery_address' => $this->delivery_address,
                 'lat' => $this->lat,
@@ -257,13 +275,19 @@ class NewAuction extends Component
             return;
         }
 
+        $this->neighbour_column = 'name_' . app()->getLocale();
+        if (!Schema::hasColumn('neighbourhoods', $this->neighbour_column))
+        {
+            $this->neighbour_column = 'name_en';
+        }
+
         // $this->suppliers = User::role(User::SUPPLIER_ROLE_NAME)
         //     ->whereHas('profile')
         //     ->with('profile', function ($q) use ($cityId) {
         //         $q->where('city', $cityId);
         //     })->get();   
 
-        $this->neighbourhoodies = Neighbourhood::select('id', 'title')->where('city_id', $cityId)->get()->toArray();
+        $this->neighbourhoodies = Neighbourhood::select('id', $this->neighbour_column, 'name_en')->where('city_id', $cityId)->get()->toArray();
 
     }
 
@@ -329,6 +353,12 @@ class NewAuction extends Component
         if (!Schema::hasColumn('categories', $this->category_column))
         {
             $this->category_column = 'name_en';
+        } 
+
+        $this->neighbour_column = 'name_' . app()->getLocale();
+        if (!Schema::hasColumn('neighbourhoods', $this->neighbour_column))
+        {
+            $this->neighbour_column = 'name_en';
         }
 
         $this->categories = Category::select('id', $this->category_column, 'name_en')->where('parent_id', 0)->get()->toArray();
@@ -336,7 +366,8 @@ class NewAuction extends Component
         $this->units = Unit::get();
         $this->made_in = MadeIn::get();
         $this->countries = Country::whereIn('id', ['19','194','231'])->get();
-        $this->neighbourhood_list = Neighbourhood::select('id', 'title')->get();
+        $this->neighbourhood_list = Neighbourhood::select('id', $this->neighbour_column, 'name_en')->get();
+
        $this->suppliers = User::with('profile.company')
            ->whereHas('roles', function($q){
                $q->where("name", User::SUPPLIER_ROLE_NAME);

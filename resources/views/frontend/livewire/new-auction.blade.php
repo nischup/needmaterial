@@ -275,7 +275,7 @@
                     <select id="neighbourhood" class="form-control" wire:model.defer="neighbourhood"  wire:change="neighborhoodToSupplier($event.target.value)">
                             <option value="">{{ __('Select Neighbourhood') }}</option>
                             @foreach($neighbourhoodies as $item)
-                                <option value="{{ $item['id'] }}">{{ $item['title'] }}</option>
+                                <option value="{{ $item['id'] }}"> {{ $item[$neighbour_column] ?? $item['name_en'] ?? $neighbour_column['name_en'] }} </option>
                             @endforeach
                         </select>
                     @error('neighborhood') <span class="text-danger error">{{ $message }}</span>@enderror
@@ -316,7 +316,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-8">
+            {{-- <div class="col-md-8">
                 <div class="mb-30">
                     <div class="form-group mb-0">
                         <label for="title">{{ __('Auction Title') }}</label>
@@ -324,8 +324,8 @@
                     </div>
                     @error('title') <span class="text-danger error">{{ $message }}</span>@enderror
                 </div>
-            </div>
-            <div class="col-md-4">
+            </div> --}}
+            <div class="col-md-12">
                   <div class="mb-30">
                     <label for="featured"> {{ __('Featured Auction') }}</label>
                     <select id="featured" class="form-control" wire:model.defer="featured">

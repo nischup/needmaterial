@@ -23,7 +23,7 @@ class NeighbourhoodComponent extends Component
 
     public $editing = false;
     public $creating = false;
-    public $data, $title, $description, $country_id, $city_id;
+    public $data, $name_en, $name_ur, $name_ar, $description, $country_id, $city_id;
     public $images = [];
     public $oldImages = [];
     public $category_column;
@@ -42,7 +42,7 @@ class NeighbourhoodComponent extends Component
         $nbrh_list = new Neighbourhood();
 
         if ($this->query) {
-            $nbrh_list = $nbrh_list->where('title','LIKE','%'. $this->query .'%');
+            $nbrh_list = $nbrh_list->where('name_en','LIKE','%'. $this->query .'%');
         }
 
         if ($this->country_id) {
@@ -67,7 +67,7 @@ class NeighbourhoodComponent extends Component
 
     private function resetInput()
     {
-        $this->title = null;
+        $this->name_en = null;
         $this->selectedRoles = [];
 
         $this->dispatchBrowserEvent('clearSelect');
@@ -78,13 +78,15 @@ class NeighbourhoodComponent extends Component
         $this->validate([
             'country_id' => 'required',
             'city_id' => 'required',
-            'title' => 'required',
+            'name_en' => 'required',
         ]);
 
         $catalogue = Neighbourhood::create([
             'country_id' => $this->country_id,
             'city_id' => $this->city_id,
-            'title' => $this->title,
+            'name_en' => $this->name_en,
+            'name_ur' => $this->name_ur,
+            'name_ar' => $this->name_ar,
         ]);
 
         $this->resetForm();
@@ -94,7 +96,7 @@ class NeighbourhoodComponent extends Component
 
     public function resetForm()
     {
-        $this->title = '';
+        $this->name_en = '';
         $this->country_id = '';
         $this->city_id = '';
     }
@@ -113,24 +115,26 @@ class NeighbourhoodComponent extends Component
         $this->editing = $id;
 
         $catalogue = \App\Models\Neighbourhood::find($id);
-        $this->title = $catalogue->title;
         $this->country_id = $catalogue->country_id;
         $this->city_id = $catalogue->city_id;
+        $this->name_en = $catalogue->name_en;
+        $this->name_ur = $catalogue->name_ur;
+        $this->name_ar = $catalogue->name_ar;
 
-        $this->child_categories = City::select('id', $this->category_column, 'name')->where('country_id', $catalogue->parent_category_id)->get()->toArray();
+        $this->child_categories = City::select('id', 'name')->where('country_id', $catalogue->parent_category_id)->get()->toArray();
     }
 
     public function update()
     {
         $this->validate([
             'category' => 'required',
-            'title' => 'required',
+            'name_en' => 'required',
             'description' => 'nullable'
         ]);
 
         \App\Models\Neighbourhood::find($this->editing)->update([
-            'title' => $this->title,
-            // 'slug' => Str::slug($this->title),
+            'name_en' => $this->name_en,
+            // 'slug' => Str::slug($this->name_en),
             'country_id' => $this->country_id,
             'city_id' => $this->city_id,
         ]);
@@ -202,7 +206,7 @@ class NeighbourhoodComponent extends Component
             return;
         }
 
-        $this->child_categories = City::select('id', $this->category_column, 'name')->where('country_id', $value)->get()->toArray();
+        $this->child_categories = City::select('id', 'name')->where('country_id', $value)->get()->toArray();
     }
 
     public function mount()
@@ -213,6 +217,6 @@ class NeighbourhoodComponent extends Component
             $this->category_column = 'name';
         }
 
-        $this->categories = Country::select('id', $this->category_column, 'name')->get()->toArray();
+        $this->categories = Country::select('id', 'name')->whereIn('id', ['19','194','231'])->get()->toArray();
     }
 }

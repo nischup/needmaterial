@@ -14,14 +14,16 @@
             <div class="about-wrapper mt--100 mt-lg--440 padding-top">
                 <div class="row">
                     <div class="col-lg-12 col-xl-6">
-                        @if (isset($page_data->page_details))
-                            <div class="about-content">
-                                <h4 class="subtitle">About Us</h4>
-                                <p> {{ $page_data->page_details }} </p>
-                            </div>
-                            @else
-                          <p> Sorry !!! No Data Available </p>
-                        @endif
+                   @if (isset($page_data))
+                        <div class="about-content">
+                            <h4 class="subtitle">About Us</h4>
+                            <p>
+                                {{ $page_data[$page_multilang_data] ?? $page_data['page_details_en'] }}
+                            </p>
+                        </div>
+                    @else
+                        <p>Sorry !!! No Data Available</p>
+                    @endif
                     </div>
                 </div>
             </div>

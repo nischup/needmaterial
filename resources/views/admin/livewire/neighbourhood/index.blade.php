@@ -69,7 +69,9 @@
                         <thead>
                         <tr>
                             <th>{{ __('ID') }}</th>
-                            <th>{{ __('Name') }}</th>
+                            <th>{{ __('Name ENG') }}</th>
+                            <th>{{ __('Name UR') }}</th>
+                            <th>{{ __('Name AR') }}</th>
                             <th>{{ __('Action') }}</th>
                         </tr>
                         </thead>
@@ -77,11 +79,13 @@
                         @foreach($list as $row)
                             <tr>
                                 <td>{{ $row->id }}</td>
-                                <td>{{ $row->title }}</td>
+                                <td>{{ $row->name_en }}</td>
+                                <td>{{ $row->name_ur }}</td>
+                                <td>{{ $row->name_ar }}</td>
                                 <td>
-                                 {{--    <button wire:click="edit({{$row->id}})" data-toggle="modal"
+                                   {{--   <button wire:click="edit({{$row->id}})" data-toggle="modal"
                                             data-target="#updateModal" class="btn btn-sm btn-outline-danger py-0">{{ __('Edit') }}
-                                    </button> --}}
+                                    </button> --}} 
                                     {{-- | --}}
                                     <button wire:click="destroy({{$row->id}})"
                                             class="btn btn-sm btn-outline-danger py-0">{{ __('Delete') }}

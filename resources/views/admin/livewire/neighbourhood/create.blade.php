@@ -35,9 +35,21 @@
 
 
                     <div class="form-group">
-                        <label>{{ __('Enter Neighbourhood') }}</label>
-                        <input type="text" wire:model="title" class="form-control input-sm"  placeholder="{{ __('Title') }}">
-                        @error('title') <span class="text-danger">{{ $message }}</span>@enderror
+                        <label>{{ __('Neighbourhood in English') }}</label>
+                        <input type="text" wire:model="name_en" class="form-control input-sm"  placeholder="{{ __('Name En') }}">
+                        @error('name_en') <span class="text-danger">{{ $message }}</span>@enderror
+                    </div>                    
+
+                    <div class="form-group">
+                        <label>{{ __('Neighbourhood in Urdu') }}</label>
+                        <input type="text" wire:model="name_ur" class="form-control input-sm"  placeholder="{{ __('Name Ur') }}">
+                        @error('name_ur') <span class="text-danger">{{ $message }}</span>@enderror
+                    </div>                    
+
+                    <div class="form-group">
+                        <label>{{ __('Neighbourhood in Arabic') }}</label>
+                        <input type="text" wire:model="name_ar" class="form-control input-sm"  placeholder="{{ __('Name Ar') }}">
+                        @error('name_ar') <span class="text-danger">{{ $message }}</span>@enderror
                     </div>
 
 

@@ -41,7 +41,9 @@
                         <tr>
                             <th>{{ __('ID') }}</th>
                             <th>{{ __('Page Name') }}</th>
-                            <th>{{ __('Page Details') }}</th>
+                            <th>{{ __('Page Details En') }}</th>
+                            <th>{{ __('Page Details Ar') }}</th>
+                            <th>{{ __('Page Details Ur') }}</th>
                             <th>{{ __('Action') }}</th>
                         </tr>
                         </thead>
@@ -59,7 +61,9 @@
                                     Privacy Policy
                                 @endif
                                 </td>
-                                <td>{{ $row->page_details }}</td>
+                                <td>{{ $row->page_details_en }}</td>
+                                <td>{{ $row->page_details_ar }}</td>
+                                <td>{{ $row->page_details_ur }}</td>
                                 <td>
                                     <button wire:click="edit({{$row->id}})" data-toggle="modal"
                                             data-target="#updateModal" class="btn btn-sm btn-outline-danger py-0">{{ __('Edit') }}

@@ -23,8 +23,20 @@
 
                     <div class="form-group">
                         <label>{{ __('Details') }}</label>
-                        <textarea type="text" wire:model="page_details" class="form-control input-sm"  placeholder="{{ __('Details') }}"></textarea>
-                        @error('page_details') <span class="text-danger">{{ $message }}</span>@enderror
+                        <textarea type="text" wire:model="page_details_en" class="form-control input-sm"  placeholder="{{ __('Details En') }}"></textarea>
+                        @error('page_details_en') <span class="text-danger">{{ $message }}</span>@enderror
+                    </div>   
+
+                    <div class="form-group">
+                        <label>{{ __('Details') }}</label>
+                        <textarea type="text" wire:model="page_details_ar" class="form-control input-sm"  placeholder="{{ __('Details Ar') }}"></textarea>
+                        @error('page_details_ar') <span class="text-danger">{{ $message }}</span>@enderror
+                    </div>   
+
+                    <div class="form-group">
+                        <label>{{ __('Details') }}</label>
+                        <textarea type="text" wire:model="page_details_ur" class="form-control input-sm"  placeholder="{{ __('Details Ur') }}"></textarea>
+                        @error('page_details_ur') <span class="text-danger">{{ $message }}</span>@enderror
                     </div>      
                 </form>
             </div>

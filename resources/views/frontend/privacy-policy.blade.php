@@ -17,7 +17,7 @@
                         @if (isset($page_data->page_details))
                             <div class="about-content">
                                 <h4 class="subtitle">Privacy Policy</h4>
-                                <p> {{ $page_data->page_details }} </p>
+                                <p> {{ $page_data[$page_multilang_data] ?? $page_data['page_details_en'] }} </p>
                             </div>
                             @else
                           <p> Sorry !!! No Data Available </p>

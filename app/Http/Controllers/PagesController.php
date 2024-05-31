@@ -18,6 +18,7 @@ use App\Models\PageContent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema; 
 
 class PagesController extends Controller
 {
@@ -416,8 +417,21 @@ class PagesController extends Controller
 
     public function aboutUs()
     {
-        $page_data = PageContent::where('page_name_id', 2)->first();
-        return view('frontend.about_us', ['page_data' => $page_data]);
+        $locale = app()->getLocale();
+        $page_multilang_data = 'page_details_' . $locale;
+        
+        if (!Schema::hasColumn('page_contents', $page_multilang_data)) {
+            $page_multilang_data = 'page_details_en';
+        }
+
+        $page_data = PageContent::select('id', 'page_name_id', $page_multilang_data, 'page_details_en')
+            ->where('page_name_id', 2)
+            ->first();
+
+        return view('frontend.about_us', [
+            'page_data' => $page_data,
+            'page_multilang_data' => $page_multilang_data
+        ]);
     }
 
     public function contact()
@@ -428,14 +442,28 @@ class PagesController extends Controller
 
     public function termCondition()
     {
+        $locale = app()->getLocale();
+        $page_multilang_data = 'page_details_' . $locale;
+        
+        if (!Schema::hasColumn('page_contents', $page_multilang_data)) {
+            $page_multilang_data = 'page_details_en';
+        }
+
         $page_data = PageContent::where('page_name_id', 1)->first();
-        return view('frontend.term-condition', ['page_data' => $page_data]);
+        return view('frontend.term-condition', ['page_data' => $page_data, 'page_multilang_data' => $page_multilang_data]);
     }    
 
     public function privacyPolicy()
     {
+        $locale = app()->getLocale();
+        $page_multilang_data = 'page_details_' . $locale;
+        
+        if (!Schema::hasColumn('page_contents', $page_multilang_data)) {
+            $page_multilang_data = 'page_details_en';
+        }
+        
         $page_data = PageContent::where('page_name_id', 4)->first();
-        return view('frontend.privacy-policy', ['page_data' => $page_data]);
+        return view('frontend.privacy-policy', ['page_data' => $page_data, 'page_multilang_data' => $page_multilang_data]);
     }
 
 
