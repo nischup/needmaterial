@@ -179,12 +179,48 @@ class NewAuction extends Component
             // );
 
 
+            $allproducts = [];
+            foreach ($this->selectedProducts as $selectedProduct) {
+                $product = Catalogue::where('id', $selectedProduct['catalogue'])->first();
+                $product_title = $product ? $product->title : null;
+
+                $unit = Unit::where('id', $selectedProduct['unit'])->first();
+                $unit_title = $unit ? $unit->title : null; 
+
+                if (isset($selectedProduct['is_exact_item']) && $selectedProduct['is_exact_item'] == 1) {
+                    if (isset($selectedProduct['brand_id'])) {
+                        $brand = Brand::where('id', $selectedProduct['brand_id'])->first();
+                        $brand_title = $brand ? $brand->title : "N/A";
+                    } else {
+                        $brand_title = "N/A";
+                    }
+                } else {
+                    $brand_title = "N/A";
+                }
+
+                $quantity = $selectedProduct['quantity'];
+                $brand_type = $selectedProduct['is_exact_item'] == 1 ? 'exact brand' : 'any brand';
+
+                $allproducts[] = [
+                    'product_title' => $product_title,
+                    'unit' => $unit_title,
+                    'brand' => $brand_title,
+                    'quantity' => $quantity,
+                    'brand_type' => $brand_type,
+                    'image' => $selectedProduct['images']['0']['src'],
+                ];
+            }
+
+
             $data = array(
                 'title' => $auction['title'],
                 'slug' => $auction['slug'],
                 'start_time' => $auction['start_time'],
-                'end_time' => $auction['end_time']
+                'end_time' => $auction['end_time'],
+                'products' => $allproducts,
             );
+
+            // dd($data);
 
             $loged_user_email = auth()->user()->email;
 
