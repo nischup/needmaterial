@@ -268,13 +268,13 @@
                 @endforeach
             </table>
 
-                <tr>
+                <tr style="margin-top: 10px;">
                     <td align="center">
                         <table border="0" align="center" width="160" cellpadding="0" cellspacing="0" bgcolor="5caad2" style="">
                             <tr>
                                 <td align="center" style="color: #ffffff; font-size: 14px; font-family: 'Work Sans', Calibri, sans-serif; line-height: 26px;">
                                     <div style="line-height: 26px;">
-                                        <a href="{{ route('my-auction-products', ['slug' => $slug]) }}" style="color: #ffffff; text-decoration: none;"> Check Your Auction Product Details </a>
+                                        <a href="{{ route('my-auction-products-for-bidding', ['slug' => $slug]) }}" style="color: #ffffff; text-decoration: none;"> Bid Now </a>
                                     </div>
                                 </td>
                             </tr>

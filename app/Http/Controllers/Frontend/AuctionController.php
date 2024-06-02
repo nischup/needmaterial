@@ -89,6 +89,15 @@ class AuctionController extends Controller
         return view('frontend.my-auction-products', [
             'auction' => $auction,
         ]);
+    }    
+
+    public function myAuctionProductsFromEmail($slug)
+    {
+        $auction = Auction::with(['products.bids'])->where('slug', $slug)->first();
+
+        return view('frontend.my-auction-products-from-email', [
+            'auction' => $auction,
+        ]);
     }
 
     public function myAuctionWonProducts($slug)

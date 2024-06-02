@@ -122,7 +122,11 @@ Route::middleware(['auth', 'profile_status'])->group(function () {
             Route::get('/dashboard', [PagesController::class, 'dashboard'])->name('frontend.dashboard');
             Route::get('/profile', [PagesController::class, 'profile'])->name('frontend.profile');
             Route::get('/view-profile', [PagesController::class, 'viewProfile'])->name('frontend.view-profile');
+
             Route::get('/my-auctions/{slug}/products', [AuctionController::class, 'myAuctionProducts'])->name('my-auction-products');
+            
+            Route::get('/my-auctions-for-bidding/{slug}/products', [AuctionController::class, 'myAuctionProductsFromEmail'])->name('my-auction-products-for-bidding');
+
             Route::get('/my-auctions-won/{slug}/products', [AuctionController::class, 'myAuctionWonProducts'])->name('my-auction-won-products');
             Route::get('/my-auctions/{slug}/products/{id}/bids', [AuctionController::class, 'myAuctionProductBids'])->name('my-auction-product-bids');
             Route::get('/my-auctions-bids-winer/{slug}/products/{id}/bids', [AuctionController::class, 'myAuctionProductBidsWinner'])->name('my-auction-product-bids-winner');

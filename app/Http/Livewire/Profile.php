@@ -133,7 +133,13 @@ class Profile extends Component
 
     public function cityChangedToneighbor($value)
     {
-        $this->neighbourhoodies = Neighbourhood::select('id', 'title')->where('city_id', $value)->get();
+        $this->neighbor_column = 'name_' . app()->getLocale();
+        if (!Schema::hasColumn('neighbourhoods', $this->neighbor_column))
+        {
+            $this->neighbor_column = 'name_en';
+        } 
+
+        $this->neighbourhoodies = Neighbourhood::select('id', $this->neighbor_column, 'name_en')->where('city_id', $value)->get();
     }
 
     public function updateAccountSetting(DocumentUploadService $documentUploadService)

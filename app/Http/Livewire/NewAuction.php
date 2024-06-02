@@ -188,8 +188,8 @@ class NewAuction extends Component
                 $unit_title = $unit ? $unit->title : null; 
 
                 if (isset($selectedProduct['is_exact_item']) && $selectedProduct['is_exact_item'] == 1) {
-                    if (isset($selectedProduct['brand_id'])) {
-                        $brand = Brand::where('id', $selectedProduct['brand_id'])->first();
+                    if (isset($selectedProduct['brand'])) {
+                        $brand = Brand::where('id', $selectedProduct['brand'])->first();
                         $brand_title = $brand ? $brand->title : "N/A";
                     } else {
                         $brand_title = "N/A";
