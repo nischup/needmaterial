@@ -9,7 +9,7 @@
     <link href='https://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel="stylesheet">
     <!-- <![endif]-->
 
-    <title>Auction Created successful</title>
+    <title> Auction Created Successful </title>
 
     <style type="text/css">
         body {
@@ -243,7 +243,30 @@
                             </tr>
                         </table>
                     </td>
+                </tr>                
+
+            <table align="center" border="0" width="600" cellpadding="0" cellspacing="0" style="border-collapse: collapse; font-family: 'Work Sans', Calibri, sans-serif;">
+                <tr>
+                    <th style="border: 1px solid #dddddd; text-align: left; padding: 8px; background-color: #f2f2f2; color: #333333;">Product Title</th>
+                    <th style="border: 1px solid #dddddd; text-align: left; padding: 8px; background-color: #f2f2f2; color: #333333;">Brand Type</th>
+                    <th style="border: 1px solid #dddddd; text-align: left; padding: 8px; background-color: #f2f2f2; color: #333333;">Brand</th>
+                    <th style="border: 1px solid #dddddd; text-align: left; padding: 8px; background-color: #f2f2f2; color: #333333;">Unit</th>
+                    <th style="border: 1px solid #dddddd; text-align: left; padding: 8px; background-color: #f2f2f2; color: #333333;">Quantity</th>
+                    <th style="border: 1px solid #dddddd; text-align: left; padding: 8px; background-color: #f2f2f2; color: #333333;">Product Image</th>
                 </tr>
+                @foreach ($products as $product)
+                    <tr>
+                        <td style="border: 1px solid #dddddd; padding: 8px;">{{ $product['product_title'] }}</td>
+                        <td style="border: 1px solid #dddddd; padding: 8px;">{{ $product['brand_type'] }}</td>
+                        <td style="border: 1px solid #dddddd; padding: 8px;">{{ $product['brand'] }}</td>
+                        <td style="border: 1px solid #dddddd; padding: 8px;">{{ $product['unit'] }}</td>
+                        <td style="border: 1px solid #dddddd; padding: 8px;">{{ $product['quantity'] }}</td>
+                        <td align="center" style="border: 1px solid #dddddd; padding: 8px;">
+                            <img src="{{ $product['image'] }}" alt="{{ $product['product_title'] }}" style="max-width: 100px; height: auto;">
+                        </td>
+                    </tr>
+                @endforeach
+            </table>
 
                 <tr>
                     <td align="center">
