@@ -32,17 +32,35 @@
                                                 <tr>
                                                     <td data-purchase="item">{{ $favorite->id }}</td>
                                                     <td data-purchase="item">
-                                                        <a target="_blank" href="{{ route('auction', ['slug' => $favorite->auction->slug]) }}">
-                                                            {{ $favorite->auction->title }}
-                                                        </a>
+                                                       @if($favorite->auction)
+                                                            <a target="_blank" href="{{ route('auction', ['slug' => $favorite->auction->slug]) }}">
+                                                                {{ $favorite->auction->title }}
+                                                            </a>
+                                                        @else
+                                                            <span>Auction not available</span>
+                                                        @endif
+
                                                     </td>
-                                                    <td data-purchase="item"><img src="{{ $favorite->auction->thumbnail }}" width="50px" alt="no image"></td>
+                                                  <td data-purchase="item">
+                                                    @if($favorite->auction)
+                                                        <img src="{{ $favorite->auction->thumbnail }}" width="50px" alt="{{ $favorite->auction->title }}">
+                                                    @else
+                                                        <img src="path/to/default/image.jpg" width="50px" alt="no image">
+                                                    @endif
+                                                </td>
+                                                 @if($favorite->auction)
+
                                                     <td data-purchase="highest bid">{{ date("j F, g:i a", strtotime($favorite->auction->start_time)) }}</td>
+                                                @endif
+                                                @if($favorite->auction)
                                                     <td data-purchase="lowest bid">{{ date("j F, g:i a", strtotime($favorite->auction->end_time)) }}</td>
+                                                @endif
+                                                @if($favorite->auction)
                                                     <td data-purchase="expires">
                                                         <a href="{{ route('auction', ['slug' => $favorite->auction->slug]) }}"> View </a>
                                                         <a href="{{ route('frontend.favorites.delete', ['id' => $favorite->id]) }}"> Delete </a>
                                                     </td>
+                                                @endif
                                                 </tr>
                                             @endforeach
                                         </tbody>

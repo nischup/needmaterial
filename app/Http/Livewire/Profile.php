@@ -32,7 +32,7 @@ class Profile extends Component
     public $city;
     public $reg_copy_doc, $reg_copy_doc_download, $vat_copy_doc, $vat_copy_doc_download;
     public $neighbourhood;
-    public $category_column, $child_categories;
+    public $category_column, $neighbor_column, $child_categories;
 
     public function render()
     {
@@ -56,6 +56,18 @@ class Profile extends Component
             $parent_category_id = explode(',', $parent_category_id);
         }
 
+        $this->neighbor_column = 'name_' . app()->getLocale();
+        if (!Schema::hasColumn('neighbourhoods', $this->neighbor_column))
+        {
+            $this->neighbor_column = 'name_en';
+        }  
+
+        $this->category_column = 'name_' . app()->getLocale();
+        if (!Schema::hasColumn('categories', $this->category_column))
+        {
+            $this->category_column = 'name_en';
+        }
+
         $this->companies = Company::get();
         $this->name = $this->user->name;
         $this->email = $this->user->email;
@@ -74,13 +86,9 @@ class Profile extends Component
 
         $this->countries = Country::select('id', 'name')->get();
         $this->cities = City::select('id', 'name')->where('country_id', $this->country)->get();
-        $this->neighbourhoodies = Neighbourhood::select('id', 'title')->get();
+        $this->neighbourhoodies = Neighbourhood::select('id', $this->neighbor_column, 'name_en')->get();
 
-        $this->category_column = 'name_' . app()->getLocale();
-        if (!Schema::hasColumn('categories', $this->category_column))
-        {
-            $this->category_column = 'name_en';
-        }
+     
 
         $this->categories = Category::select('id', $this->category_column, 'name_en')->where('parent_id', 0)->get()->toArray();
 

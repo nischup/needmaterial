@@ -109,7 +109,7 @@
                         <select class="form-select pl-3" id="citySelect" wire:model.defer="neighbourhood">
                             <option value="">{{ __('Select neighbourhood') }}</option>
                             @foreach($neighbourhoodies as $item)
-                                <option value="{{ $item->id }}">{{ $item->title }}</option>
+                                <option value="{{ $item->id }}"> {{ $item[$neighbor_column] ?? $item['name_en'] ?? $neighbor_column['name_en'] }} </option>
                             @endforeach
                         </select>
                         @error('neighbourhood') <span class="text-danger error">{{ $message }}</span>@enderror
@@ -183,21 +183,7 @@
                                     @endforeach
                                 </select>
 
-                                @if ($cat_dtls != null)
-                                 <?php
-                                    $cat_dtls = '';
-                                        foreach ($cat as $cat_data)
-                                        {
-                                            if($cat_dtls != '')
-                                            {
-                                                $cat_dtls .= ', ';
-                                            }
-                                            $cat_dtls .= $cat_data->name_en;
-                                        }
-                                    ?>
-                                    <span> {{ $cat_dtls }}</span>
-
-                                @endif
+                                
 
                                 @error('selectedCat') <span class="text-danger error">{{ $message }}</span>@enderror
 
