@@ -63,6 +63,7 @@
                             @error('selectedProducts.'.$key.'.category') <span class="text-danger error">{{ $message }}</span> @enderror
                         </div>
                     </div>
+
                     <div class="col-md-3">
                         <div class="form-group mb-0">
                             <label>{{ __('Catalogue') }}:</label>
@@ -75,10 +76,22 @@
                                         @endif
                                     @endforeach
                                 @endif
+                                 <option value="other">{{ __('Other') }}</option>
                             </select>
                             @error('selectedProducts.'.$key.'.catalogue') <span class="text-danger error">{{ $message }}</span> @enderror
                         </div>
                     </div>
+
+                    @if(isset($selectedProducts[$key]['catalogue']) && $selectedProducts[$key]['catalogue'] === 'other')
+                        <div class="col-md-3">
+                            <label>{{ __('Product Name') }}:</label>
+                            <div class="form-group">
+                                <input type="text" wire:model.defer="selectedProducts.{{$key}}.product_title" class="form-control form-control-sm" placeholder="Product">
+                                @error('selectedProducts.'.$key.'.product_title') <span class="text-danger error">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="col-md-3">
                         <div class="form-group mb-0">
                             <label>{{ __('Type') }}:</label>
@@ -90,14 +103,6 @@
                             @error('selectedProducts.'.$key.'.is_exact_item') <span class="text-danger error">{{ $message }}</span> @enderror
                         </div>
                     </div>
-
-            {{--         <div class="col-md-3">
-                        <label>{{ __('Title') }}:</label>
-                        <div class="form-group">
-                            <input type="text" wire:model.defer="selectedProducts.{{$key}}.product_title" class="form-control form-control-sm" placeholder="Title">
-                            @error('selectedProducts.'.$key.'.product_title') <span class="text-danger error">{{ $message }}</span> @enderror
-                        </div>
-                    </div> --}}
              
 
                   <div class="col-md-2" wire:ignore id="brand_div_{{$key}}" style="display: block">

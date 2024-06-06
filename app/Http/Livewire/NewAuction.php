@@ -208,7 +208,16 @@ class NewAuction extends Component
                     'quantity' => $quantity,
                     'brand_type' => $brand_type,
                     'image' => $selectedProduct['images']['0']['src'],
-                ];
+                ];              
+
+                // $catalogDataWhenOther = [
+                //     'product_title' => $product_title,
+                //     'unit' => $unit_title,
+                //     'brand' => $brand_title,
+                //     'quantity' => $quantity,
+                //     'brand_type' => $brand_type,
+                //     'image' => $selectedProduct['images'],
+                // ];
             }
 
 
@@ -349,6 +358,22 @@ class NewAuction extends Component
 
     }
 
+    // public function catalogueChanged($value, $key)
+    // {
+    //     if (!$value) {
+    //         $this->catalogueImages = null;
+    //         $this->selectedProducts[$key]['images'] = [];
+    //         $this->selectedProducts[$key]['description'] = '';
+    //         return;
+    //     }
+
+    //     $catalogue = Catalogue::with('images')->find($value);
+    //     $this->selectedProducts[$key]['description'] = $catalogue->description;
+    //     if ($catalogue->images) {
+    //         $this->selectedProducts[$key]['images'] = $catalogue->images->toArray();
+    //     }
+    // }
+
     public function catalogueChanged($value, $key)
     {
         if (!$value) {
@@ -358,12 +383,21 @@ class NewAuction extends Component
             return;
         }
 
-        $catalogue = Catalogue::with('images')->find($value);
-        $this->selectedProducts[$key]['description'] = $catalogue->description;
-        if ($catalogue->images) {
-            $this->selectedProducts[$key]['images'] = $catalogue->images->toArray();
+        if ($value === 'other') {
+            $this->selectedProducts[$key]['description'] = ''; // Clear the description for custom input
+            $this->selectedProducts[$key]['images'] = []; // Clear images for custom input
+            $this->selectedProducts[$key]['product_title'] = ''; // Clear product title for custom input
+        } else {
+            $catalogue = Catalogue::with('images')->find($value);
+            if ($catalogue) {
+                $this->selectedProducts[$key]['description'] = $catalogue->description;
+                if ($catalogue->images) {
+                    $this->selectedProducts[$key]['images'] = $catalogue->images->toArray();
+                }
+            }
         }
     }
+
 
     public function catalogueImageManageDone($productKey)
     {
