@@ -120,29 +120,32 @@ class NewAuction extends Component
         try {
 
             // auto generated title
-            $allTitles = [];
-            foreach ($this->selectedProducts as $selectedProduct) {
-            $product = Catalogue::where('id', $selectedProduct['catalogue'])->first();
-            $product_title = $product ? $product->title : null;
-                if ($product_title) {
-                    $randomNumber = rand(1000, 9999); // Adjust the range as needed
-                    $allTitles[] = $product_title;
+            if(isset($selectedProducts['catalogue']) && $selectedProducts['catalogue'] != '420'){
+                $allTitles = [];
+                foreach ($this->selectedProducts as $selectedProduct) {
+                $product = Catalogue::where('id', $selectedProduct['catalogue'])->first();
+                $product_title = $product ? $product->title : null;
+                    if ($product_title) {
+                        $randomNumber = rand(1000, 9999); // Adjust the range as needed
+                        $allTitles[] = $product_title;
+                    }
                 }
+
+                $concatenatedTitles = implode(', ', $allTitles).'-'.date('Y-m-d').'-'.$randomNumber;
+                // auto generated title end
             }
 
-            $concatenatedTitles = implode(', ', $allTitles).'-'.date('Y-m-d').'-'.$randomNumber;
-            // auto generated title end
-
+            $title= 'aaaa aaa aa';
 
             $auction = Auction::create([
                 'user_id' => auth()->user()->id,
                 'service_type' => $this->service_type,
                 'is_open_bid' => $this->is_open_bid,
-                // 'title' => $this->title,
-                'title' => $concatenatedTitles,
+                'title' => $title,
+                // 'title' => $concatenatedTitles,
                 'featured' => $this->featured,
-                // 'slug' => Str::slug($this->title),
-                'slug' => Str::slug($concatenatedTitles),
+                'slug' => Str::slug($title),
+                // 'slug' => Str::slug($concatenatedTitles),
                 'description' => $this->description,
                 'delivery_address' => $this->delivery_address,
                 'lat' => $this->lat,
@@ -180,6 +183,7 @@ class NewAuction extends Component
 
 
             $allproducts = [];
+            $list = [];
             foreach ($this->selectedProducts as $selectedProduct) {
                 $product = Catalogue::where('id', $selectedProduct['catalogue'])->first();
                 $product_title = $product ? $product->title : null;
@@ -208,16 +212,30 @@ class NewAuction extends Component
                     'quantity' => $quantity,
                     'brand_type' => $brand_type,
                     'image' => $selectedProduct['images']['0']['src'],
-                ];              
+                ];    
 
-                // $catalogDataWhenOther = [
-                //     'product_title' => $product_title,
-                //     'unit' => $unit_title,
-                //     'brand' => $brand_title,
-                //     'quantity' => $quantity,
-                //     'brand_type' => $brand_type,
-                //     'image' => $selectedProduct['images'],
-                // ];
+                if(isset($selectedProducts['catalogue']) && $selectedProducts['catalogue'] === '420'){
+                    $catalogDataWhenOther = [
+                        'user_id' => auth()->user()->id,
+                        'parent_category_id' => $this->p_category,
+                        'category_id' => $this->category,
+                        'title' => $this->product_title,
+                        'slug' => Str::slug($this->product_title),
+                        'description' => $this->description,
+                    ];
+                    $newCatalogueProduct = Catalogue::create($catalogDataWhenOther);
+
+                    foreach ($selectedProduct['images'] as $image) {
+                        // will ignore images which are not exists
+                        if (isset($image['src_original']) && $image['src_original']) {
+                            $list[] = [
+                                'catalogue_id' => $newCatalogueProduct->id,
+                                'src' => $image['src_original'],
+                            ];
+                        }
+                    }
+                    CatalogueImage::insert($list);
+                }
             }
 
 

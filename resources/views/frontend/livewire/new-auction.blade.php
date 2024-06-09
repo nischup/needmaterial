@@ -76,13 +76,13 @@
                                         @endif
                                     @endforeach
                                 @endif
-                                 <option value="other">{{ __('Other') }}</option>
+                                 <option value="420">{{ __('Other') }}</option>
                             </select>
                             @error('selectedProducts.'.$key.'.catalogue') <span class="text-danger error">{{ $message }}</span> @enderror
                         </div>
                     </div>
 
-                    @if(isset($selectedProducts[$key]['catalogue']) && $selectedProducts[$key]['catalogue'] === 'other')
+                    @if(isset($selectedProducts[$key]['catalogue']) && $selectedProducts[$key]['catalogue'] === '420')
                         <div class="col-md-3">
                             <label>{{ __('Product Name') }}:</label>
                             <div class="form-group">
