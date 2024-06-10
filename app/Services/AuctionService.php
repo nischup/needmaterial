@@ -5,6 +5,9 @@ namespace App\Services;
 use App\Models\AuctionProduct;
 use App\Models\AuctionProductImage;
 use App\Models\AuctionTargetSupplier;
+use App\Models\Catalogue;
+use App\Models\CatalogueImage;
+use Illuminate\Support\Str;
 
 class AuctionService
 {
@@ -13,6 +16,35 @@ class AuctionService
         if ($selectedProducts && count($selectedProducts)) {
             $list = [];
             foreach ($selectedProducts as $selectedProduct) {
+
+                    // 
+                    if(isset($selectedProducts['catalogue'] === '10'){
+
+                    $catalogDataWhenOther = [
+                        'user_id' => auth()->user()->id,
+                        'parent_category_id' => $selectedProduct['p_category'],
+                        'category_id' => $selectedProduct['category'],
+                        'title' => $selectedProduct['product_title'],
+                        'slug' => Str::slug($selectedProduct['product_title']),
+                        'description' => $selectedProduct['description'],
+                    ];
+
+                    // dd($catalogDataWhenOther);
+                    $newCatalogueProduct = Catalogue::create($catalogDataWhenOther);
+                    // dd($newCatalogueProduct->id);
+                    foreach ($selectedProduct['images'] as $image) {
+                        if (isset($image['src_original']) && $image['src_original']) {
+                            $list[] = [
+                                'catalogue_id' => $newCatalogueProduct->id,
+                                'src' => $image['src_original'],
+                            ];
+                        }
+                    }
+                    CatalogueImage::insert($list);
+
+                }
+
+
                 $auctionProduct = AuctionProduct::create([
                     'auction_id' => $auctionId,
                     'catalogue_id' => $selectedProduct['catalogue'],

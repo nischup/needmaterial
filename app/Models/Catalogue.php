@@ -19,6 +19,11 @@ class Catalogue extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }    
+
+    public function parent_category()
+    {
+        return $this->belongsTo(Category::class, 'parent_category_id')->where('parent_id', 0);
     }
 
     public function products()
