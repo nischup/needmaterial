@@ -17,32 +17,30 @@ class AuctionService
             $list = [];
             foreach ($selectedProducts as $selectedProduct) {
 
-                    // 
-                    if(isset($selectedProducts['catalogue'] === '10'){
 
-                    $catalogDataWhenOther = [
-                        'user_id' => auth()->user()->id,
-                        'parent_category_id' => $selectedProduct['p_category'],
-                        'category_id' => $selectedProduct['category'],
-                        'title' => $selectedProduct['product_title'],
-                        'slug' => Str::slug($selectedProduct['product_title']),
-                        'description' => $selectedProduct['description'],
-                    ];
+                //     if(isset($selectedProducts['catalogue'] === '10'){
 
-                    // dd($catalogDataWhenOther);
-                    $newCatalogueProduct = Catalogue::create($catalogDataWhenOther);
-                    // dd($newCatalogueProduct->id);
-                    foreach ($selectedProduct['images'] as $image) {
-                        if (isset($image['src_original']) && $image['src_original']) {
-                            $list[] = [
-                                'catalogue_id' => $newCatalogueProduct->id,
-                                'src' => $image['src_original'],
-                            ];
-                        }
-                    }
-                    CatalogueImage::insert($list);
+                //     $catalogDataWhenOther = [
+                //         'user_id' => auth()->user()->id,
+                //         'parent_category_id' => $selectedProduct['p_category'],
+                //         'category_id' => $selectedProduct['category'],
+                //         'title' => $selectedProduct['product_title'],
+                //         'slug' => Str::slug($selectedProduct['product_title']),
+                //         'description' => $selectedProduct['description'],
+                //     ];
 
-                }
+                //     $newCatalogueProduct = Catalogue::create($catalogDataWhenOther);
+                //     foreach ($selectedProduct['images'] as $image) {
+                //         if (isset($image['src_original']) && $image['src_original']) {
+                //             $list[] = [
+                //                 'catalogue_id' => $newCatalogueProduct->id,
+                //                 'src' => $image['src_original'],
+                //             ];
+                //         }
+                //     }
+                //     CatalogueImage::insert($list);
+
+                // }
 
 
                 $auctionProduct = AuctionProduct::create([

@@ -66,7 +66,7 @@
 
                     <div class="col-md-3">
                         <div class="form-group mb-0">
-                            <label>{{ __('Catalogue') }}:</label>
+                            <label>{{ __('Catalogue') }}: </label>
                             <select wire:model.defer="selectedProducts.{{$key}}.catalogue" wire:change="catalogueChanged($event.target.value,{{$key}})" class="form-control form-control-sm">
                                 <option value="">{{ __('Select Catalog Product') }}</option>
                                 @if($catalogues && isset($catalogues[$key]))
@@ -76,13 +76,13 @@
                                         @endif
                                     @endforeach
                                 @endif
-                                 {{-- <option value="10">{{ __('Other') }}</option> --}}
+                                 <option value="other">{{ __('Other') }}</option>
                             </select>
                             @error('selectedProducts.'.$key.'.catalogue') <span class="text-danger error">{{ $message }}</span> @enderror
                         </div>
                     </div>
 
-                    @if(isset($selectedProducts[$key]['catalogue']) && $selectedProducts[$key]['catalogue'] === '10')
+                    @if(isset($selectedProducts[$key]['catalogue']) && $selectedProducts[$key]['catalogue'] === 'other')
                         <div class="col-md-3">
                             <label>{{ __('Product Name') }}:</label>
                             <div class="form-group">
@@ -218,6 +218,20 @@
                         <option value="{{ \App\Models\Auction::SELLING_SERVICE }}">SELLING</option>
                     @endif
                     <option value="{{ \App\Models\Auction::QUOTATION_SERVICE }}">QUOTATION</option>
+                </select>
+            </div>
+            @error('service_type') <span class="text-danger error">{{ $message }}</span>@enderror
+        </div>
+
+
+
+        <div class="mb-30">
+            <div class="form-group mb-0">
+                <label for="service_type">{{ __('Notification Type') }}</label>
+                <select class="form-select form-control-sm" wire:model.defer="service_type" id="service_type">
+                    <option value="">Select Notification Type</option>
+                    <option value="{{ \App\Models\Auction::BUYING_SERVICE }}">Diameter</option>
+                    <option value="{{ \App\Models\Auction::QUOTATION_SERVICE }}">Neighbourhood</option>
                 </select>
             </div>
             @error('service_type') <span class="text-danger error">{{ $message }}</span>@enderror

@@ -224,7 +224,7 @@ class AuctionController extends Controller
     public function setAuctionBidRejectStatusUpdate(Request $request)
     {
 
-         AuctionBidProduct::where('id', $request->auction_product_id)->update(['confirmation_status' => $request->status]);
+        AuctionBidProduct::where('id', $request->auction_product_id)->update(['confirmation_status' => $request->status]);
 
         session()->flash('message', __('You Reject this Bid.'));
 

@@ -215,27 +215,27 @@ class NewAuction extends Component
                     'image' => $selectedProduct['images']['0']['src'],
                 ];    
 
-                // if(isset($selectedProducts['catalogue']) && $selectedProducts['catalogue'] === '10'){
-                //     $catalogDataWhenOther = [
-                //         'user_id' => auth()->user()->id,
-                //         'parent_category_id' => $this->p_category,
-                //         'category_id' => $this->category,
-                //         'title' => $this->product_title,
-                //         'slug' => Str::slug($this->product_title),
-                //         'description' => $this->description,
-                //     ];
-                //     $newCatalogueProduct = Catalogue::create($catalogDataWhenOther);
+                if(isset($selectedProducts['catalogue']) && $selectedProducts['catalogue'] === 'other'){
+                    $catalogDataWhenOther = [
+                        'user_id' => auth()->user()->id,
+                        'parent_category_id' => $this->p_category,
+                        'category_id' => $this->category,
+                        'title' => $this->product_title,
+                        'slug' => Str::slug($this->product_title),
+                        'description' => $this->description,
+                    ];
+                    $newCatalogueProduct = Catalogue::create($catalogDataWhenOther);
 
-                //     foreach ($selectedProduct['images'] as $image) {
-                //         if (isset($image['src_original']) && $image['src_original']) {
-                //             $list[] = [
-                //                 'catalogue_id' => $newCatalogueProduct->id,
-                //                 'src' => $image['src_original'],
-                //             ];
-                //         }
-                //     }
-                //     CatalogueImage::insert($list);
-                // }
+                    foreach ($selectedProduct['images'] as $image) {
+                        if (isset($image['src_original']) && $image['src_original']) {
+                            $list[] = [
+                                'catalogue_id' => $newCatalogueProduct->id,
+                                'src' => $image['src_original'],
+                            ];
+                        }
+                    }
+                    CatalogueImage::insert($list);
+                }
             }
 
 
