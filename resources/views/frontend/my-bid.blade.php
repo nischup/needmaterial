@@ -90,7 +90,8 @@
                                                                         <div class="col-md-6">
                                                                             <form action="{{ route('set-winner-reject-bid-status-update') }}" method="post">
                                                                                 @csrf
-                                                                                <input type="hidden" name="auction_product_id" value="{{ $my_bid->id }}">
+                                                                                <input type="hidden" name="auction_product_id" value="{{ $my_bid->id }}"> 
+                                                                                <input type="hidden" name="auction_product_bid_id" value="{{ $my_bid->auction_product_id }}">
                                                                                 <input type="hidden" name="status" value="400">
                                                                                 <button type="submit" class="custom-button btn-xs"> Reject </button>
                                                                             </form>  

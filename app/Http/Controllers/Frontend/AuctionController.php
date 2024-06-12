@@ -69,10 +69,27 @@ class AuctionController extends Controller
 
     public function latestBids($id)
     {
-        return AuctionBidProduct::where('auction_product_id', $id)
+        // all data those are bidding
+        // return AuctionBidProduct::where('auction_product_id', $id)
+        //     ->limit(10)
+        //     ->latest()
+        //     ->get();
+
+
+        // group by user_id data those are bidding
+        $subQuery = DB::table('auction_bid_products')
+            ->select('user_id', DB::raw('MAX(id) as latest_bid_id'))
+            ->where('auction_product_id', $id)
+            ->groupBy('user_id');
+
+        $latestBids = AuctionBidProduct::joinSub($subQuery, 'latest_bids', function($join) {
+                $join->on('auction_bid_products.id', '=', 'latest_bids.latest_bid_id');
+            })
+            ->orderBy('auction_bid_products.created_at', 'desc')
             ->limit(10)
-            ->latest()
             ->get();
+
+        return $latestBids;
     }
 
     private function sendSuccessSMS($bidId) {
@@ -223,8 +240,9 @@ class AuctionController extends Controller
 
     public function setAuctionBidRejectStatusUpdate(Request $request)
     {
-
         AuctionBidProduct::where('id', $request->auction_product_id)->update(['confirmation_status' => $request->status]);
+
+        AuctionProduct::where('id', $request->auction_product_bid_id)->update(['winner_id' => null]);
 
         session()->flash('message', __('You Reject this Bid.'));
 

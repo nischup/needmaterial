@@ -76,21 +76,10 @@
                                         @endif
                                     @endforeach
                                 @endif
-                                 <option value="other">{{ __('Other') }}</option>
                             </select>
                             @error('selectedProducts.'.$key.'.catalogue') <span class="text-danger error">{{ $message }}</span> @enderror
                         </div>
                     </div>
-
-                    @if(isset($selectedProducts[$key]['catalogue']) && $selectedProducts[$key]['catalogue'] === 'other')
-                        <div class="col-md-3">
-                            <label>{{ __('Product Name') }}:</label>
-                            <div class="form-group">
-                                <input type="text" wire:model.defer="selectedProducts.{{$key}}.product_title" class="form-control form-control-sm" placeholder="Product">
-                                @error('selectedProducts.'.$key.'.product_title') <span class="text-danger error">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
-                    @endif
 
                     <div class="col-md-3">
                         <div class="form-group mb-0">
@@ -223,19 +212,6 @@
             @error('service_type') <span class="text-danger error">{{ $message }}</span>@enderror
         </div>
 
-
-
-        <div class="mb-30">
-            <div class="form-group mb-0">
-                <label for="service_type">{{ __('Notification Type') }}</label>
-                <select class="form-select form-control-sm" wire:model.defer="service_type" id="service_type">
-                    <option value="">Select Notification Type</option>
-                    <option value="{{ \App\Models\Auction::BUYING_SERVICE }}">Diameter</option>
-                    <option value="{{ \App\Models\Auction::QUOTATION_SERVICE }}">Neighbourhood</option>
-                </select>
-            </div>
-            @error('service_type') <span class="text-danger error">{{ $message }}</span>@enderror
-        </div>
 
         <div class="row mb-20" >
             <div class="col-md-6">

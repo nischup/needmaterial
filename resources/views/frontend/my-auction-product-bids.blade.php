@@ -32,7 +32,7 @@
                                     @endif
                                     <table class="table table-sm">
                                         <thead>
-                                        <th>ID</th>
+                                        <th>#</th>
                                         <th>Title</th>
                                         <th>Auc.Type</th>
                                         <th>Bidder</th>
@@ -48,9 +48,11 @@
                                         @endif
                                         </thead>
                                         <tbody>
+                                            @php $i = 1; @endphp
                                             @foreach($product->bids as $bid)
                                                 <tr>
-                                                <td style="width: 10%">{{ $bid->bidder->id }}</td>
+                                                {{-- <td style="width: 10%">{{ $bid->bidder->id }}</td> --}}
+                                                <td style="width: 10%">{{ $i++ }}</td>
                                                 <td style="width: 10%">{{ $product->product_title }}</td>
                                                 <td>
                                                         @if ($product->auction['service_type'] == 1)
@@ -95,8 +97,10 @@
                                                 <td>
                                                     @if ($product->status == 0)
                                                         <span style="color: blue;"> Running </span>
-                                                    @elseif ($product->status == 1 && $bid->winner_status == 1)
+                                                    @elseif ($product->status == 1 && $bid->winner_status == 1 && $bid->confirmation_status == '200')
                                                         <span style="color: green; font-weight: bold;"> Won </span>  
+                                                    @elseif ($product->status == 1 && $bid->winner_status == 1 && $bid->confirmation_status == '400')
+                                                        <span style="color: red; font-weight: bold;"> Rejected </span>  
                                                     @elseif ($product->status == 1 && $bid->winner_status != 1)
                                                         <span style="color: red;"> Not Won </span>  
                                                     @elseif ($product->status == 2 && $bid->winner_status == 1)
@@ -128,7 +132,8 @@
 
                                                 </td>
                                                 <td>
-                                                    @if(!$product->winner_id)
+                                                    {{-- @if(!$product->winner_id) --}}
+                                                    @if(!$product->winner_id && $bid->confirmation_status != '400' && ($product->status == 0 || $product->status == 1))
                                                     <form action="{{ route('set-auction-bid-winner') }}" method="post">
                                                         @csrf
                                                         <input type="hidden" name="auction_product_id" value="{{ $bid->auction_product_id }}">     
