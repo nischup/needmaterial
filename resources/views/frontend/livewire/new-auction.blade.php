@@ -590,23 +590,26 @@
                         marker.setPosition(pos);
                         marker.setVisible(true);
 
-                        // Geocode the latitude and longitude to get a human-readable address
+  
+                        // Geocode the latitude and longitude to get a human-readable address start
                         var geocoder = new google.maps.Geocoder();
-                        geocoder.geocode({ 'location': pos }, function (results, status) {
-                            if (status === 'OK') {
-                                if (results[0]) {
-                                    var address = results[0].formatted_address;
-                                    // document.getElementById('location-data').textContent = address;
-                                    document.getElementById('address-input').value = address;
+                        geocodeLatLng(geocoder, pos);
+                        function geocodeLatLng(geocoder, location) {
+                            geocoder.geocode({ 'location': location }, function (results, status) {
+                                // console.log(results);
+                                if (status === 'OK') {
+                                    if (results[0]) {
+                                        var address = results[0].formatted_address;
+                                        document.getElementById('address-input').value = address;
+                                    } else {
+                                        document.getElementById('address-input').value = '';
+                                    }
                                 } else {
-                                    // document.getElementById('location-data').textContent = 'No results found';
                                     document.getElementById('address-input').value = '';
                                 }
-                            } else {
-                                // document.getElementById('location-data').textContent = 'Geocoder failed due to: ' + status;
-                                document.getElementById('address-input').value = '';
-                            }
-                        });
+                            });
+                        }
+                         // Geocode the latitude and longitude to get a human-readable address end
 
 
                     }, function() {
