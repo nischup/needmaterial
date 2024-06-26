@@ -40,7 +40,9 @@
                         <thead>
                         <tr>
                             <th>{{ __('ID') }}</th>
-                            <th>{{ __('Name') }}</th>
+                            <th>{{ __('Name En') }}</th>
+                            <th>{{ __('Name Ar') }}</th>
+                            <th>{{ __('Name Ur') }}</th>
                             <th>{{ __('Action') }}</th>
                         </tr>
                         </thead>
@@ -48,7 +50,9 @@
                         @foreach($list as $row)
                             <tr>
                                 <td>{{ $row->id }}</td>
-                                <td>{{ $row->name }}</td>
+                                <td>{{ $row->name_en }}</td>
+                                <td>{{ $row->name_ar }}</td>
+                                <td>{{ $row->name_ur }}</td>
                                 <td>
                                     <button wire:click="edit({{$row->id}})" data-toggle="modal"
                                             data-target="#updateModal" class="btn btn-sm btn-outline-danger py-0">{{ __('Edit') }}

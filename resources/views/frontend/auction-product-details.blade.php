@@ -62,11 +62,11 @@
                             </li>
                             <li>
                                 <h6 class="info">Made In:</h6>
-                                <span class="details">{{ $product->made_by ? $product->made_by->name : __('Unknown') }}</span>
+                                <span class="details">{{ $product->made_by ? $product->made_by->name_en : __('Unknown') }}</span>
                             </li>
                             <li>
                                 <h6 class="info">Unit:</h6>
-                                <span class="details">{{ $product->unit->title }}</span>
+                                <span class="details">{{ $product->unit->title_en }}</span>
                             </li>
                             <li>
                                 <h6 class="info">Brand Type:</h6>
@@ -133,7 +133,7 @@
                                                 <select x-model="unit" class="form-control form-control-sm" id="unit">
                                                     {{-- <option value="" selected disabled>Select Unit</option> --}}
                                                     @foreach($units as $unit)
-                                                        <option value="{{ $unit->id }}" selected disabled>{{ $unit->title }}</option>
+                                                        <option value="{{ $unit->id }}" selected disabled>{{ $unit[$unit_column] ?? $unit['title_en'] }}</option>
                                                     @endforeach
                                                 </select>
                                                 <template x-if="errors.hasOwnProperty('unit')">
@@ -149,7 +149,8 @@
                                                 <select x-model="made_in" class="form-control form-control-sm" id="made_in">
                                                     <option value="" selected disabled>Select Made in</option>
                                                     @foreach($made_in as $made)
-                                                        <option value="{{ $made->id }}">{{ $made->name }}</option>
+                                                        <option value="{{ $made->id }}">{{ isset($made->$made_column) ? $made->$made_column : $made->name_en }}</option>
+
                                                     @endforeach
                                                 </select>
                                                 <template x-if="errors.hasOwnProperty('made_in')">
@@ -172,17 +173,19 @@
                                                 <select x-model="brand" class="form-control form-control-sm" id="brand">
                                                     <option value="" selected disabled>Select Brand</option>
                                                     @foreach($brands as $brand)
-                                                        <option value="{{ $brand->id }}">{{ $brand->title }}</option>
+                                                        <option value="{{ $brand->id }}">{{ $brand[$brand_column] ?? $brand['title_en'] }}</option>
                                                     @endforeach
                                                 </select>
 
                                                 @elseif($product->exact_item_require == 1)
 
                                                 <select x-model="brand" class="form-control form-control-sm" id="brand">
+                                                    <option value="" selected disabled>Select a brand</option>
                                                     @foreach($brands as $brand)
-                                                        <option value="{{ $brand->id }}" selected disabled>{{ $brand->title }}</option>
+                                                        <option value="{{ $brand->id }}">{{ $brand[$brand_column] ?? $brand['title_en'] }}</option>
                                                     @endforeach
                                                 </select>
+
 
                                                 @endif
 

@@ -9,11 +9,23 @@
             </div>
             <div class="modal-body">
                <form>
-                   <div class="form-group">
-                        <label>{{ __('Enter Name') }}</label>
-                        <input type="text" wire:model="name" class="form-control input-sm"  placeholder="{{ __('Name') }}">
-                        @error('name') <span class="text-danger">{{ $message }}</span>@enderror
-                    </div>     
+                            <div class="form-group">
+                        <label>{{ __('Name in En') }}</label>
+                        <input type="text" wire:model="name_en" class="form-control input-sm"  placeholder="{{ __('En Name') }}">
+                        @error('name_en') <span class="text-danger">{{ $message }}</span>@enderror
+                    </div>    
+
+                    <div class="form-group">
+                        <label>{{ __('Name in Ar') }}</label>
+                        <input type="text" wire:model="name_ar" class="form-control input-sm"  placeholder="{{ __('Ar Name') }}">
+                        @error('name_ar') <span class="text-danger">{{ $message }}</span>@enderror
+                    </div>    
+
+                    <div class="form-group">
+                        <label>{{ __('Name in Ur') }}</label>
+                        <input type="text" wire:model="name_ur" class="form-control input-sm"  placeholder="{{ __('Ur Name') }}">
+                        @error('name_ur') <span class="text-danger">{{ $message }}</span>@enderror
+                    </div>   
                 </form>
             </div>
             <div class="modal-footer">

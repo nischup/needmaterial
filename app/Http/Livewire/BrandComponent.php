@@ -10,7 +10,7 @@ class BrandComponent extends Component
 {
     use WithPagination;
 
-    public $data, $title, $selected_id;
+    public $data, $title_en, $title_ar, $title_ur, $selected_id;
     public array $selectedRoles = [];
     public $per_page = 10;
     public $query = '';
@@ -25,7 +25,7 @@ class BrandComponent extends Component
         // dd($brand_list);
         if ($this->query) {
             $brand_list->where(function($query) {
-                $query->where('title','LIKE','%'. $this->query .'%');
+                $query->where('title_en','LIKE','%'. $this->query .'%');
             });
         }
 
@@ -59,12 +59,14 @@ class BrandComponent extends Component
     public function store()
     {
         $this->validate([
-            'title' => 'required',
+            'title_en' => 'required',
     
         ]);
 
         $brand = brand::create([
-            'title' => $this->title,
+            'title_en' => $this->title_en,
+            'title_ar' => $this->title_ar,
+            'title_ur' => $this->title_ur,
         ]);
 
         // $brand->syncRoles($this->selectedRoles);
@@ -79,7 +81,9 @@ class BrandComponent extends Component
         $this->hydrate();
         $record = Brand::findOrFail($id);
         $this->selected_id = $id;
-        $this->title = $record->title;
+        $this->title_en = $record->title_en;
+        $this->title_ar = $record->title_ar;
+        $this->title_ur = $record->title_ur;
         // $this->selectedRoles = optional($record->roles)->pluck('id')->toArray();
 
         // $this->dispatchBrowserEvent('showPreviousRoles', ['roles' => $this->selectedRoles]);
@@ -89,12 +93,14 @@ class BrandComponent extends Component
     {
         $this->validate([
             'selected_id' => 'required|numeric',
-            'title' => 'required',
+            'title_en' => 'required',
         ]);
         if ($this->selected_id) {
             $record = Brand::find($this->selected_id);
             $record->update([
-                'title' => $this->title,
+                'title_en' => $this->title_en,
+                'title_ar' => $this->title_ar,
+                'title_ur' => $this->title_ur,
             ]);
 
             // $record->syncRoles($this->selectedRoles);

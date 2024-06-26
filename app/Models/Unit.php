@@ -10,7 +10,7 @@ class Unit extends Model
 {
     use HasFactory, Cachable;
 
-    protected $fillable = ['title'];
+    protected $guarded = [];
 
     public $timestamps = false;
 }

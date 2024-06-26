@@ -367,16 +367,37 @@ class PagesController extends Controller
             ->findOrFail($request->id);
 
         $images = $auctionProduct->images->unique('src');
-        $brands = Brand::get();
-        $units = Unit::get();
-        $made_in = MadeIn::get();
+
+        $locale = app()->getLocale();
+
+        $brand_column = 'title_' . $locale;
+        if (!Schema::hasColumn('brands', $brand_column)) {
+            $brand_column = 'title_en';
+        }
+        $brands = Brand::select('id', $brand_column, 'title_en')->get();      
+
+        $unit_column = 'title_' . $locale;
+        if (!Schema::hasColumn('units', $unit_column)) {
+            $unit_column = 'title_en';
+        }
+        $units = Unit::select('id', $unit_column, 'title_en')->get();        
+
+        $made_column = 'name_' . $locale;
+        if (!Schema::hasColumn('made_ins', $made_column)) {
+            $made_column = 'name_en';
+        }
+        $made_in = MadeIn::select('id', $made_column, 'name_en')->get();
+
 
         return view('frontend.auction-product-details', [
             'product' => $auctionProduct,
             'images' => $images,
             'brands' => $brands,
+            'brand_column' => $brand_column,
             'units' => $units,
+            'unit_column' => $unit_column,
             'made_in' => $made_in,
+            'made_column' => $made_column,
         ]);
     }
 

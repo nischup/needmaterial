@@ -10,9 +10,21 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label>{{ __('Enter Name') }}</label>
-                        <input type="text" wire:model="title" class="form-control input-sm"  placeholder="{{ __('Title') }}">
-                        @error('title') <span class="text-danger">{{ $message }}</span>@enderror
+                        <label>{{ __('EN Name') }}</label>
+                        <input type="text" wire:model="title_en" class="form-control input-sm"  placeholder="{{ __('Name En') }}">
+                        @error('title_en') <span class="text-danger">{{ $message }}</span>@enderror
+                    </div>  
+
+                    <div class="form-group">
+                        <label>{{ __('AR Name') }}</label>
+                        <input type="text" wire:model="title_ar" class="form-control input-sm"  placeholder="{{ __('Name Ar') }}">
+                        @error('title_ar') <span class="text-danger">{{ $message }}</span>@enderror
+                    </div>  
+
+                    <div class="form-group">
+                        <label>{{ __('UR Name') }}</label>
+                        <input type="text" wire:model="title_ur" class="form-control input-sm"  placeholder="{{ __('Name Ur') }}">
+                        @error('title_ur') <span class="text-danger">{{ $message }}</span>@enderror
                     </div>      
                 </form>
             </div>

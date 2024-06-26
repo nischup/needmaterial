@@ -66,7 +66,12 @@
 
                     <div class="col-md-3">
                         <div class="form-group mb-0">
-                            <label>{{ __('Catalogue') }}: </label>
+                            <label>{{ __('Catalogue') }}:  <span style="color: green; font-weight:bold;cursor: pointer;"
+                                    title="Please Add New Catalog Here" id="myBtn"> [ Add
+                                    New + ] </span> </label>
+
+                                    <button id="catalogueImagesModal"> add </button>
+
                             <select wire:model.defer="selectedProducts.{{$key}}.catalogue" wire:change="catalogueChanged($event.target.value,{{$key}})" class="form-control form-control-sm">
                                 <option value="">{{ __('Select Catalog Product') }}</option>
                                 @if($catalogues && isset($catalogues[$key]))
@@ -100,7 +105,7 @@
                         <select wire:model.defer="selectedProducts.{{$key}}.brand" class="form-control form-control-sm">
                             <option value="">{{ __('Select Brand') }}</option>
                             @foreach($brands as $brand)
-                                <option value="{{ $brand->id }}">{{ $brand->title }}</option>
+                                <option value="{{ $brand->id }}"> {{ $brand[$brand_column] ?? $brand['title_en'] ?? $brand_column['title_en'] }} </option>
                             @endforeach
                         </select>
                         @error('selectedProducts.'.$key.'.brand') <span class="text-danger error">{{ $message }}</span> @enderror
@@ -117,7 +122,7 @@
                             <select wire:model.defer="selectedProducts.{{$key}}.unit" class="form-control form-control-sm">
                                 <option value="">{{ __('Select unit') }}</option>
                                 @foreach($units as $unit)
-                                    <option value="{{ $unit->id }}">{{ $unit->title }}</option>
+                                    <option value="{{ $unit->id }}">{{ $unit[$unit_column] ?? $unit['title_en'] ?? $unit_column['title_en'] }} </option>
                                 @endforeach
                             </select>
                             @error('selectedProducts.'.$key.'.unit') <span class="text-danger error">{{ $message }}</span> @enderror
@@ -129,7 +134,7 @@
                             <select wire:model.defer="selectedProducts.{{$key}}.made_in" class="form-control form-control-sm">
                                 <option value=""> Select Made In </option>
                                 @foreach($made_in as $made_data)
-                                    <option value="{{ $made_data->id }}">{{ $made_data->name }}</option>
+                                    <option value="{{ $made_data->id }}">{{ $made_data[$made_column] ?? $made_data['name_en'] ?? $made_column['name_en'] }}</option>
                                 @endforeach
                             </select>
 
@@ -481,6 +486,66 @@
         </div>
     </form>
 
+
+        <div id="myModal" class="modal" style="margin-top: 100px;">
+
+        <div class="modal-content" wire:ignore>
+            <span class="close" onclick="closeModal(this)">&times;</span>
+                <form>
+                    <div class="form-group">
+                        <label>{{ __('Select Category') }}</label>
+                        <select class="form-control" wire:model.defer="catalog_category">
+                            <option selected >{{ __('Select Category') }}</option>
+                            @foreach($categories as $item)
+                                <option value="{{ $item['id'] }}">{{ $item[$category_column] ? $item[$category_column] : $item['name_en'] }}</option>
+                            @endforeach
+                        </select>
+                        @error('catalog_category') <span class="text-danger error">{{ $message }}</span>@enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">{{ __('Select Sub Category') }}</label>
+                        <select class="form-control" id="category" wire:model.defer="category">
+                            <option selected>{{ __('Select Sub Category') }}</option>
+                                @if (isset($child_categories_data))
+                                    @foreach ($child_categories_data as $child_category_data)
+                                        <option value="{{ $child_category_data['id'] }}">
+                                            {{ $child_category_data[$category_column] ? $child_category_data[$category_column] : $child_category_data['name_en'] }}
+                                        </option>
+                                    @endforeach
+                                @endif
+                        </select>
+                        @error('category') <span class="text-danger error">{{ $message }}</span>@enderror
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>{{ __('Enter Name') }}</label>
+                        <input type="text" class="form-control input-sm"  wire:model.defer="catalog_title" placeholder="{{ __('Title') }}">
+                        @error('catalog_title') <span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">{{ __('Description') }}</label>
+                        <textarea class="form-control form-control-sm" id="description" wire:model.defer="description" placeholder="Enter description"></textarea>
+                        @error('description') <span class="text-danger error">{{ $message }}</span> @enderror
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="images">{{ __('Images') }}</label>
+                        <input type="file" multiple id="images" wire:model="images">
+                        <div wire:loading wire:target="images">{{ __('Uploading') }}...</div>
+                        @error('images') <span class="text-danger error">{{ $message }}</span> @enderror
+                    </div>
+
+                </form>
+                <button wire:click.prevent="store()" class="btn btn-primary">{{ __('Submit') }}</button>
+        </div>
+
+    </div>
+
     <!-- Modal -->
     <div class="model__add__product" id="catalogueImagesModal" wire:ignore.self>
         <div class="d-flex justify-content-center align-items-center">
@@ -537,7 +602,31 @@
 </div>
 
 @push('scripts')
+
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("myBtn");
+        var span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        function closeModal(e){
+            console.log('ok');
+            var modal = document.getElementById("myModal");
+                    modal.style.display = "none";
+        }
+    </script>
+
     <script>
         // START MAP RELATED JS
         function initialize() {
@@ -851,6 +940,27 @@
     });
 
     </script>
+
+
+    <style type="text/css">
+        
+        .modal-content {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            width: 30%;
+            margin-top: 5%;
+            margin-left: 35%;
+            pointer-events: auto;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid rgba(0, 0, 0, .2);
+            border-radius: .3rem;
+            outline: 0;
+        }
+    </style>
 
 
 @endpush

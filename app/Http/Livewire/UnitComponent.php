@@ -10,7 +10,7 @@ class UnitComponent extends Component
 {
    use WithPagination;
 
-    public $data, $title, $selected_id;
+    public $data, $title_en, $title_ar, $title_ur, $selected_id;
     public array $selectedRoles = [];
     public $per_page = 10;
     public $query = '';
@@ -25,7 +25,7 @@ class UnitComponent extends Component
 
         if ($this->query) {
             $unit_list->where(function($query) {
-                $query->where('title','LIKE','%'. $this->query .'%');
+                $query->where('title_en','LIKE','%'. $this->query .'%');
             });
         }
 
@@ -41,7 +41,7 @@ class UnitComponent extends Component
 
     private function resetInput()
     {
-        $this->title = null;
+        $this->title_en = null;
         $this->selectedRoles = [];
 
         $this->dispatchBrowserEvent('clearSelect');
@@ -59,12 +59,14 @@ class UnitComponent extends Component
     public function store()
     {
         $this->validate([
-            'title' => 'required',
+            'title_en' => 'required',
     
         ]);
 
         $unit = Unit::create([
-            'title' => $this->title,
+            'title_en' => $this->title_en,
+            'title_ar' => $this->title_ar,
+            'title_ur' => $this->title_ur,
         ]);
 
         // $unit->syncRoles($this->selectedRoles);
@@ -79,7 +81,7 @@ class UnitComponent extends Component
         $this->hydrate();
         $record = Unit::findOrFail($id);
         $this->selected_id = $id;
-        $this->title = $record->title;
+        $this->title_en = $record->title_en;
         // $this->selectedRoles = optional($record->roles)->pluck('id')->toArray();
 
         // $this->dispatchBrowserEvent('showPreviousRoles', ['roles' => $this->selectedRoles]);
@@ -89,12 +91,14 @@ class UnitComponent extends Component
     {
         $this->validate([
             'selected_id' => 'required|numeric',
-            'title' => 'required',
+            'title_en' => 'required',
         ]);
         if ($this->selected_id) {
             $record = Unit::find($this->selected_id);
             $record->update([
-                'title' => $this->title,
+                'title_en' => $this->title_en,
+                'title_ar' => $this->title_ar,
+                'title_ur' => $this->title_ur,
             ]);
 
             // $record->syncRoles($this->selectedRoles);

@@ -29,8 +29,9 @@ class NewAuction extends Component
 {
     use WithFileUploads;
 
-    public $category_column, $category, $neighbour_column;
+    public $category_column, $category, $neighbour_column, $brand_column, $unit_column, $made_column;
     public $child_categories = [];
+    public $child_categories_data = [];
     public $cities = [];
     public $neighbourhoodies = [];
     public $title, $featured, $description, $product_title, $brand, $unit, $is_exact_item, $delivery_address, $lat, $long, $start_time, $end_time;
@@ -42,8 +43,9 @@ class NewAuction extends Component
     public $supplier_list = [];
     public $product, $brands, $made_in, $units, $suppliers, $countries, $city, $neighbourhood, $selectedSuppliers, $thumbnail;
     public $selectedProducts = [];
+    public $images = [];
     public $addingNewProduct = false, $updatingProductKey = false;
-    public $comment, $p_category;
+    public $comment, $p_category, $catalog_category, $catalog_title;
     public $catalogueImages, $productNewImages;
 
     public $newProduct = [
@@ -215,27 +217,6 @@ class NewAuction extends Component
                     'image' => $selectedProduct['images']['0']['src'],
                 ];    
 
-                // if(isset($selectedProducts['catalogue']) && $selectedProducts['catalogue'] === 'other'){
-                //     $catalogDataWhenOther = [
-                //         'user_id' => auth()->user()->id,
-                //         'parent_category_id' => $this->p_category,
-                //         'category_id' => $this->category,
-                //         'title' => $this->product_title,
-                //         'slug' => Str::slug($this->product_title),
-                //         'description' => $this->description,
-                //     ];
-                //     $newCatalogueProduct = Catalogue::create($catalogDataWhenOther);
-
-                //     foreach ($selectedProduct['images'] as $image) {
-                //         if (isset($image['src_original']) && $image['src_original']) {
-                //             $list[] = [
-                //                 'catalogue_id' => $newCatalogueProduct->id,
-                //                 'src' => $image['src_original'],
-                //             ];
-                //         }
-                //     }
-                //     CatalogueImage::insert($list);
-                // }
             }
 
 
@@ -319,6 +300,59 @@ class NewAuction extends Component
             ->where('category_id', $value)
             ->get()->toArray();
     }
+
+
+    public function product_categoryChanged($value)
+    {
+         if (!$value) {
+            return;
+        }
+
+        // dd($value);
+
+        $this->child_categories_data = Category::select('id', $this->category_column, 'name_en')->where('parent_id', $value)->get()->toArray();
+    }
+    
+    public function store()
+    {
+        $this->validate([
+            'category' => 'required',
+            'title' => 'required',
+            'description' => 'nullable',
+            'images' => 'required|min:1',
+        ]);
+
+        $catalogue = Catalogue::create([
+            'parent_category_id' => $this->catalog_category,
+            'category_id' => $this->category,
+            'title' => $this->catalog_title,
+            'slug' => Str::slug($this->title),
+            'description' => $this->description,
+            // 'user_id' => auth()->user()->id,
+        ]);
+
+        $this->storeImages($catalogue->id, $this->images);
+
+        $this->resetForm();
+        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatchBrowserEvent('alert', ['type' => 'success',  'message' => 'Catalog created successfully!']);
+    }
+
+    public function storeImages($productId, $images)
+    {
+        $imageService = new ImageService();
+
+        foreach ($images as $image) {
+            $list[] = [
+                'catalogue_id' => $productId,
+                'src' => $imageService->saveImage($image),
+            ];
+        }
+
+
+        CatalogueImage::insert($list);
+    }
+
 
 
     public function countryChanged($value)
@@ -449,10 +483,29 @@ class NewAuction extends Component
             $this->neighbour_column = 'name_en';
         }
 
+
+        $this->brand_column = 'title_' . app()->getLocale();
+        if (!Schema::hasColumn('brands', $this->brand_column))
+        {
+            $this->brand_column = 'title_en';
+        }   
+
+        $this->unit_column = 'title_' . app()->getLocale();
+        if (!Schema::hasColumn('units', $this->unit_column))
+        {
+            $this->unit_column = 'title_en';
+        }  
+
+        $this->made_column = 'name_' . app()->getLocale();
+        if (!Schema::hasColumn('made_ins', $this->made_column))
+        {
+            $this->made_column = 'name_en';
+        }
+
         $this->categories = Category::select('id', $this->category_column, 'name_en')->where('parent_id', 0)->get()->toArray();
-        $this->brands = Brand::get();
-        $this->units = Unit::get();
-        $this->made_in = MadeIn::get();
+        $this->brands = Brand::select('id', $this->brand_column, 'title_en')->get();
+        $this->units = Unit::select('id', $this->unit_column, 'title_en')->get();
+        $this->made_in = MadeIn::select('id', $this->made_column, 'name_en')->get();
         $this->countries = Country::whereIn('id', ['19','194','231'])->get();
         $this->neighbourhood_list = Neighbourhood::select('id', $this->neighbour_column, 'name_en')->get();
 
