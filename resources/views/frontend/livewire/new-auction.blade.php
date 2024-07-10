@@ -1,5 +1,6 @@
 @push('styles')
-    <style>
+
+<style>
         .auction-product {
             border: 2px solid #eee;
             margin-top: 15px;
@@ -9,7 +10,57 @@
             padding-right: 15px;
             padding-top: 15px
         }
+
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            padding-top: 100px;
+            /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            margin-top: 100px;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
+    
 @endpush
 <div>
     <form>
@@ -40,7 +91,7 @@
                     <div class="col-md-2">
                         <div class="form-group  mb-0">
                             <label>{{ __('Category') }}:</label>
-                            <select wire:model.defer="selectedProducts.{{$key}}.p_category" wire:change="p_categoryChanged($event.target.value,{{$key}})" class="form-control form-control-sm">
+                            <select wire:model.defer="selectedProducts.{{$key}}.p_category" wire:change="p_categoryChanged($event.target.value,{{$key}})" class="form-control form-control-sm" id="category__id">
                                 <option value="">{{ __('Select Category') }}</option>
                                 @foreach($categories as $item)
                                     <option value="{{ $item['id'] }}">{{ $item[$category_column] ? $item[$category_column] : $item['name_en'] }}</option>
@@ -52,7 +103,7 @@
                     <div class="col-md-2">
                         <div class="form-group mb-0">
                             <label>{{ __('Sub Category') }}:</label>
-                            <select wire:model.defer="selectedProducts.{{$key}}.category" wire:change="categoryChanged($event.target.value,{{$key}})" class="form-control form-control-sm">
+                            <select wire:model.defer="selectedProducts.{{$key}}.category" wire:change="categoryChanged($event.target.value,{{$key}})" class="form-control form-control-sm" id="sub__category__id">
                                 <option value="">{{ __('Select Sub Category') }}</option>
                                 @if($child_categories && isset($child_categories[$key]))
                                     @foreach($child_categories[$key] as $child_category)
@@ -66,22 +117,24 @@
 
                     <div class="col-md-3">
                         <div class="form-group mb-0">
-                            <label>{{ __('Catalogue') }}:  <span style="color: green; font-weight:bold;cursor: pointer;"
-                                    title="Please Add New Catalog Here" id="myBtn"> [ Add
-                                    New + ] </span> </label>
+                                <label>{{ __('Catalogue') }}:</label>
+                                <span style="color: green; font-weight:bold;cursor: pointer;"
+                                    title="Please Add New Catalog Here"  onclick="openModal('{{ $key }}')"> [ Add
+                                    New + ] </span>
 
-                                    <button id="catalogueImagesModal"> add </button>
-
-                            <select wire:model.defer="selectedProducts.{{$key}}.catalogue" wire:change="catalogueChanged($event.target.value,{{$key}})" class="form-control form-control-sm">
-                                <option value="">{{ __('Select Catalog Product') }}</option>
-                                @if($catalogues && isset($catalogues[$key]))
-                                    @foreach($catalogues[$key] as $catalogue)
-                                        @if($catalogue)
-                                            <option value="{{ $catalogue['id'] }}">{{ $catalogue['title'] }}</option>
-                                        @endif
-                                    @endforeach
-                                @endif
-                            </select>
+                                <select wire:model.defer="selectedProducts.{{ $key }}.catalogue"
+                                    wire:change="catalogueChanged($event.target.value,{{ $key }})"
+                                    class="form-control form-control-sm" id="catalog__('{{ $key }}')">
+                                    <option value="">{{ __('Select Catalog Product') }}</option>
+                                    @if ($catalogues && isset($catalogues[$key]))
+                                        @foreach ($catalogues[$key] as $catalogue)
+                                            @if ($catalogue)
+                                                <option value="{{ $catalogue['id'] }}">{{ $catalogue['title'] }}
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </select>
                             @error('selectedProducts.'.$key.'.catalogue') <span class="text-danger error">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -189,6 +242,24 @@
                     </div>
                 </div>
             </div>
+
+
+                <!-- Modal -->
+                <div id="myModal-{{ $key }}" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal('{{ $key }}')">&times;</span>
+                        <div class="form-group">
+                            <label for="title-{{ $key }}">Catalog Name</label>
+                            <input type="text" class="form-control" id="title-{{ $key }}" placeholder="Enter catalog">
+                        </div>
+                        <div class="form-group">
+                            <label>Upload Images</label>
+                            <input type="file" class="form-control" id="images-{{ $key }}" name="images[]" multiple>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="saveCatalog('{{ $key }}')" data-url="{{ route('saveRuntimeCatalog') }}">Submit</button>
+                    </div>
+                </div>
+
             @endforeach
         </div>
 
@@ -487,65 +558,6 @@
     </form>
 
 
-        <div id="myModal" class="modal" style="margin-top: 100px;">
-
-        <div class="modal-content" wire:ignore>
-            <span class="close" onclick="closeModal(this)">&times;</span>
-                <form>
-                    <div class="form-group">
-                        <label>{{ __('Select Category') }}</label>
-                        <select class="form-control" wire:model.defer="catalog_category">
-                            <option selected >{{ __('Select Category') }}</option>
-                            @foreach($categories as $item)
-                                <option value="{{ $item['id'] }}">{{ $item[$category_column] ? $item[$category_column] : $item['name_en'] }}</option>
-                            @endforeach
-                        </select>
-                        @error('catalog_category') <span class="text-danger error">{{ $message }}</span>@enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="category">{{ __('Select Sub Category') }}</label>
-                        <select class="form-control" id="category" wire:model.defer="category">
-                            <option selected>{{ __('Select Sub Category') }}</option>
-                                @if (isset($child_categories_data))
-                                    @foreach ($child_categories_data as $child_category_data)
-                                        <option value="{{ $child_category_data['id'] }}">
-                                            {{ $child_category_data[$category_column] ? $child_category_data[$category_column] : $child_category_data['name_en'] }}
-                                        </option>
-                                    @endforeach
-                                @endif
-                        </select>
-                        @error('category') <span class="text-danger error">{{ $message }}</span>@enderror
-                    </div>
-
-
-                    <div class="form-group">
-                        <label>{{ __('Enter Name') }}</label>
-                        <input type="text" class="form-control input-sm"  wire:model.defer="catalog_title" placeholder="{{ __('Title') }}">
-                        @error('catalog_title') <span class="text-danger">{{ $message }}</span>@enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description">{{ __('Description') }}</label>
-                        <textarea class="form-control form-control-sm" id="description" wire:model.defer="description" placeholder="Enter description"></textarea>
-                        @error('description') <span class="text-danger error">{{ $message }}</span> @enderror
-                    </div>
-
-
-
-                    <div class="form-group">
-                        <label for="images">{{ __('Images') }}</label>
-                        <input type="file" multiple id="images" wire:model="images">
-                        <div wire:loading wire:target="images">{{ __('Uploading') }}...</div>
-                        @error('images') <span class="text-danger error">{{ $message }}</span> @enderror
-                    </div>
-
-                </form>
-                <button wire:click.prevent="store()" class="btn btn-primary">{{ __('Submit') }}</button>
-        </div>
-
-    </div>
-
     <!-- Modal -->
     <div class="model__add__product" id="catalogueImagesModal" wire:ignore.self>
         <div class="d-flex justify-content-center align-items-center">
@@ -606,25 +618,73 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
-        var modal = document.getElementById("myModal");
-        var btn = document.getElementById("myBtn");
-        var span = document.getElementsByClassName("close")[0];
-
-        btn.onclick = function() {
+       function openModal(itemId) {
+            var modal = document.getElementById('myModal-' + itemId);
             modal.style.display = "block";
         }
 
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
+        function closeModal(itemId) {
+            var modal = document.getElementById('myModal-' + itemId);
+            modal.style.display = "none";
         }
 
-        function closeModal(e){
-            console.log('ok');
-            var modal = document.getElementById("myModal");
+
+        function saveCatalog(itemId) {
+            var category__id = $("#category__id").val();
+            var sub__category__id = $("#sub__category__id").val();
+            var title = $("#title-" + itemId).val();
+            var url = $(event.target).data('url');
+            var images = document.getElementById('images-' + itemId).files;
+
+            if (category__id == '') {
+                alert('Please select category');
+                return;
+            }
+            if (sub__category__id == '') {
+                alert('Please select subcategory');
+                return;
+            }
+            if (title == '') {
+                alert('Please enter catalog title');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('category__id', category__id);
+            formData.append('sub__category__id', sub__category__id);
+            formData.append('title', title);
+
+            for (var i = 0; i < images.length; i++) {
+                formData.append('images[]', images[i]);
+            }
+
+            // Log FormData content to verify images are included
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ', ' + pair[1]);
+            }
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                dataType: "json",
+                data: formData,
+                contentType: false, // Ensure this is false for FormData
+                processData: false, // Ensure this is false for FormData
+                success: function(data) {
+                    $("#catalog__" + itemId).append('<option value="' + data.id + '" selected>' + data.title + '</option>');
+                    $("#title-" + itemId).val('');
+                    $('#images-' + itemId).val(''); // Clear the file input
+
+                    var modal = document.getElementById("myModal-" + itemId);
                     modal.style.display = "none";
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                    alert('Error saving catalog: ' + xhr.responseJSON.message);
+                }
+            });
         }
+
     </script>
 
     <script>

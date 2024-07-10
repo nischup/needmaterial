@@ -20,6 +20,11 @@
     let url = "{{ route('changeLang') }}";
 
     $('body').on('change', '#changeLang', function() {
-        window.location.href = url + "?lang="+ $(this).val();
+        window.location.href = url + "?lang=" + $(this).val();
+    });
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
     });
 </script>

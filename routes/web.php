@@ -197,3 +197,5 @@ Route::get('/faq', [PagesController::class, 'faq'])->name('faq');
 // API
 Route::get('/catalogues/{id}', [CatalogueController::class, 'show']);
 Route::get('/category/{category}', [PagesController::class, 'auctionsByCategory'])->name('auctionsByCategory');
+
+Route::post('/runtime-save-catalog', [PagesController::class, 'saveRuntimeCatalog'])->name('saveRuntimeCatalog');

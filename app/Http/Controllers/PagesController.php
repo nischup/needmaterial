@@ -10,6 +10,7 @@ use App\Models\Catalogue;
 use App\Models\Category;
 use App\Models\Subscription;
 use App\Models\Neighbourhood;
+use App\Models\CatalogueImage;
 use App\Models\Unit;
 use App\Models\MadeIn;
 use App\Models\Favorite;
@@ -19,6 +20,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema; 
+use Illuminate\Support\Str;
+use App\Services\ImageService;
 
 class PagesController extends Controller
 {
@@ -422,6 +425,47 @@ class PagesController extends Controller
             'units' => $units,
             'made_in' => $made_in,
         ]);
+    }
+
+
+    public function saveRuntimeCatalog(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'category__id' => 'required|integer',
+            'sub__category__id' => 'required|integer',
+            'title' => 'required|string|max:255',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        try {
+            $data = Catalogue::create([
+                'parent_category_id' => $validatedData['category__id'],
+                'category_id'        => $validatedData['sub__category__id'],
+                'title'              => $validatedData['title'],
+                'slug'               => Str::slug($validatedData['title']),
+                'user_id'            => Auth::id(),
+            ]);
+
+            if ($request->hasFile('images')) {
+                $imageService = new ImageService();
+                $list = [];
+                
+                foreach ($request->file('images') as $image) {
+                    $list[] = [
+                        'catalogue_id' => $data->id,
+                        'src' => $imageService->saveImage($image),
+                    ];
+                }
+
+                CatalogueImage::insert($list);
+            }
+
+            return response()->json($data, 201);
+        } catch (\Exception $e) {
+            \Log::error('Error saving catalog: ' . $e->getMessage(), ['exception' => $e]);
+            return response()->json(['error' => 'Unable to save catalog', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function auctionBidSuccess($slug, $catalogueSlug, Request $request)
