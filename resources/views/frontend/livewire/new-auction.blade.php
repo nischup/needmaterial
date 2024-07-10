@@ -91,7 +91,7 @@
                     <div class="col-md-2">
                         <div class="form-group  mb-0">
                             <label>{{ __('Category') }}:</label>
-                            <select wire:model.defer="selectedProducts.{{$key}}.p_category" wire:change="p_categoryChanged($event.target.value,{{$key}})" class="form-control form-control-sm" id="category__id">
+                            <select wire:model.defer="selectedProducts.{{$key}}.p_category" wire:change="p_categoryChanged($event.target.value,{{$key}})" class="form-control form-control-sm" id="category__id{{$key}}">
                                 <option value="">{{ __('Select Category') }}</option>
                                 @foreach($categories as $item)
                                     <option value="{{ $item['id'] }}">{{ $item[$category_column] ? $item[$category_column] : $item['name_en'] }}</option>
@@ -103,7 +103,7 @@
                     <div class="col-md-2">
                         <div class="form-group mb-0">
                             <label>{{ __('Sub Category') }}:</label>
-                            <select wire:model.defer="selectedProducts.{{$key}}.category" wire:change="categoryChanged($event.target.value,{{$key}})" class="form-control form-control-sm" id="sub__category__id">
+                            <select wire:model.defer="selectedProducts.{{$key}}.category" wire:change="categoryChanged($event.target.value,{{$key}})" class="form-control form-control-sm" id="sub__category__id{{$key}}">
                                 <option value="">{{ __('Select Sub Category') }}</option>
                                 @if($child_categories && isset($child_categories[$key]))
                                     @foreach($child_categories[$key] as $child_category)
@@ -124,7 +124,7 @@
 
                                 <select wire:model.defer="selectedProducts.{{ $key }}.catalogue"
                                     wire:change="catalogueChanged($event.target.value,{{ $key }})"
-                                    class="form-control form-control-sm" id="catalog__('{{ $key }}')">
+                                    class="form-control form-control-sm" id="catalog__{{ $key }}">
                                     <option value="">{{ __('Select Catalog Product') }}</option>
                                     @if ($catalogues && isset($catalogues[$key]))
                                         @foreach ($catalogues[$key] as $catalogue)
@@ -630,8 +630,8 @@
 
 
         function saveCatalog(itemId) {
-            var category__id = $("#category__id").val();
-            var sub__category__id = $("#sub__category__id").val();
+            var category__id = $("#category__id" + itemId).val();
+            var sub__category__id = $("#sub__category__id" + itemId).val();
             var title = $("#title-" + itemId).val();
             var url = $(event.target).data('url');
             var images = document.getElementById('images-' + itemId).files;
