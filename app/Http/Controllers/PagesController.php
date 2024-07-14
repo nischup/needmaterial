@@ -471,8 +471,7 @@ class PagesController extends Controller
 
 
     public function GetRuntimeCatalogTitle($title): JsonResponse
-    {
-        $catalog_title = Catalogue::where('title', $title)->first();
+    {        $catalog_title = Catalogue::where('title', $title)->first();
 
         if (!$catalog_title) {
             return response()->json(['message' => 'Catalog title not found'], 404);
