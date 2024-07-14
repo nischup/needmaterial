@@ -671,12 +671,29 @@
                 contentType: false, // Ensure this is false for FormData
                 processData: false, // Ensure this is false for FormData
                 success: function(data) {
-                    $("#catalog__" + itemId).append('<option value="' + data.id + '" selected>' + data.title + '</option>');
                     $("#title-" + itemId).val('');
                     $('#images-' + itemId).val(''); // Clear the file input
 
                     var modal = document.getElementById("myModal-" + itemId);
                     modal.style.display = "none";
+
+                    // second Ajax Request
+                     $.ajax({
+                        url: '/runtime-get-catalog-title/' + data.title,
+                        type: "GET", 
+                        dataType: "json",
+                        success: function(response) {
+                            
+                        $("#catalog__" + itemId).append('<option value="' + response.id + '" selected>' + response.title + '</option>');
+                            console.log(response.id);
+                            
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(error);
+                            alert('Error fetching data: ' + xhr.responseJSON.message);
+                        }
+                    });
+
                 },
                 error: function(xhr, status, error) {
                     console.error(error);

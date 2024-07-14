@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema; 
 use Illuminate\Support\Str;
 use App\Services\ImageService;
+use Illuminate\Http\JsonResponse;
 
 class PagesController extends Controller
 {
@@ -466,6 +467,18 @@ class PagesController extends Controller
             \Log::error('Error saving catalog: ' . $e->getMessage(), ['exception' => $e]);
             return response()->json(['error' => 'Unable to save catalog', 'message' => $e->getMessage()], 500);
         }
+    }
+
+
+    public function GetRuntimeCatalogTitle($title): JsonResponse
+    {
+        $catalog_title = Catalogue::where('title', $title)->first();
+
+        if (!$catalog_title) {
+            return response()->json(['message' => 'Catalog title not found'], 404);
+        }
+
+        return response()->json($catalog_title);
     }
 
     public function auctionBidSuccess($slug, $catalogueSlug, Request $request)

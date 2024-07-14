@@ -199,3 +199,4 @@ Route::get('/catalogues/{id}', [CatalogueController::class, 'show']);
 Route::get('/category/{category}', [PagesController::class, 'auctionsByCategory'])->name('auctionsByCategory');
 
 Route::post('/runtime-save-catalog', [PagesController::class, 'saveRuntimeCatalog'])->name('saveRuntimeCatalog');
+Route::get('/runtime-get-catalog-title/{title}', [PagesController::class, 'GetRuntimeCatalogTitle'])->name('getRuntimeCatalogTitle');
