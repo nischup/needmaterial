@@ -262,12 +262,15 @@
                         <td style="border: 1px solid #dddddd; padding: 8px;">{{ $product['unit'] }}</td>
                         <td style="border: 1px solid #dddddd; padding: 8px;">{{ $product['quantity'] }}</td>
                         <td align="center" style="border: 1px solid #dddddd; padding: 8px;">
-                            <img src="{{ $product['image'] }}" alt="{{ $product['product_title'] }}" style="max-width: 100px; height: auto;">
+                            @foreach($product['images'] as $image)
+                                <img src="{{ $image['src'] }}" alt="{{ $product['product_title'] }}" style="max-width: 100px; height: auto;">
+                                @break
+                            @endforeach
                         </td>
                     </tr>
                 @endforeach
             </table>
-
+                <br/>
                 <tr style="margin-top: 10px;">
                     <td align="center">
                         <table border="0" align="center" width="160" cellpadding="0" cellspacing="0" bgcolor="5caad2" style="">

@@ -214,7 +214,7 @@ class NewAuction extends Component
                     'brand' => $brand_title,
                     'quantity' => $quantity,
                     'brand_type' => $brand_type,
-                    'image' => $selectedProduct['images']['0']['src'],
+                    'images' => $selectedProduct['images'],
                 ];    
 
             }
