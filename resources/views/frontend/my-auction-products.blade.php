@@ -106,8 +106,8 @@
                                                          alt="{{ optional($product->catalogue)->title }}">
                                                 </td>
                                                 <td style="width: 10%">{{ $product->exact_item_require == 0 ? "Any Brand" : "Exact Brand" }}</td>
-                                                <td style="width: 10%">{{ optional($product->brand)->title }}</td>
-                                                <td style="width: 10%">{{ optional($product->unit)->title }}</td>
+                                                <td style="width: 10%">{{ optional($product->brand)->title_en }}</td>
+                                                <td style="width: 10%">{{ optional($product->unit)->title_en }}</td>
                                                 <td style="width: 10%">{{ $product->quantity }}</td>
                                                 <td style="width: 20%">
                                                     <a href="{{ route('my-auction-product-bids', [

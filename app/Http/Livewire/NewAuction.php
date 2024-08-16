@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Unit;
 use App\Models\MadeIn;
 use App\Models\User;
+use App\Models\UserProfile;
 use App\Models\Country;
 use App\Models\City;
 use App\Models\Neighbourhood;
@@ -41,7 +42,7 @@ class NewAuction extends Component
     public $catalogues = [];
     public $neighbourhood_list = [];
     public $supplier_list = [];
-    public $product, $brands, $made_in, $units, $suppliers, $countries, $city, $neighbourhood, $selectedSuppliers, $thumbnail;
+    public $product, $brands, $made_in, $units, $suppliers, $countries, $country, $city, $neighbourhood, $selectedSuppliers, $thumbnail;
     public $selectedProducts = [];
     public $images = [];
     public $addingNewProduct = false, $updatingProductKey = false;
@@ -233,6 +234,31 @@ class NewAuction extends Component
             $loged_user_email = auth()->user()->email;
 
             $auction = Auction::with(['products.catalogue.images', 'unit'])->where('id', $auction->id)->first();
+
+            if ($this->is_open_bid == 1) {
+
+                $em_data = UserProfile::where('country', $this->country)->where('city', $this->city)->where('neighbourhood', $this->neighbourhood)->get();
+
+                foreach ($em_data as $profile) {
+                    // Access the user's email
+                    $email = $profile->user->email;
+                    dd($email); // Dump and die to check the email
+                }
+
+                $supplier_email_data = User::whereIn('id', $this->selectedSuppliers)->get();
+
+                $emailsToSend = $supplier_email_data->pluck('email');
+
+                // dd($emailsToSend);
+                if(!empty($emailsToSend)){
+                    foreach ($emailsToSend as $email) {
+                        Mail::send('emails.auction-creation-supplier-notifiaction', $data, function($message) use ($email) {
+                            $message->to($email)
+                                ->subject('Auction Created in Your Area, Bid Now');
+                        });
+                    }
+                }
+            }        
 
             if ($this->selectedSuppliers) {
                 $supplier_email_data = User::whereIn('id', $this->selectedSuppliers)->get();

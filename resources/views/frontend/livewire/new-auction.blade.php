@@ -313,7 +313,7 @@
             <div class="col-md-3">
                 <div class="mb-30" id="country_div" style="display: block">
                     <label for="country"> {{ __('Country') }}</label>
-                    <select id="country" wire:change="countryChanged($event.target.value)" class="form-control">
+                    <select id="country" wire:change="countryChanged($event.target.value)" wire:model.defer="country" class="form-control">
                         <option value="">{{ __('Select Country') }}</option>
                         @foreach($countries as $country)
                             <option value="{{ $country->id }}">
