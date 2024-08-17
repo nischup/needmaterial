@@ -415,9 +415,26 @@ class PagesController extends Controller
             ->findOrFail($request->id);
         // dd($auctionProduct);
         $images = $auctionProduct->images->unique('src');
-        $brands = Brand::get();
-        $units = Unit::get();
-        $made_in = MadeIn::get();
+
+        $locale = app()->getLocale();
+
+        $brand_column = 'title_' . $locale;
+        if (!Schema::hasColumn('brands', $brand_column)) {
+            $brand_column = 'title_en';
+        }
+        $brands = Brand::select('id', $brand_column, 'title_en')->get();      
+
+        $unit_column = 'title_' . $locale;
+        if (!Schema::hasColumn('units', $unit_column)) {
+            $unit_column = 'title_en';
+        }
+        $units = Unit::select('id', $unit_column, 'title_en')->get();        
+
+        $made_column = 'name_' . $locale;
+        if (!Schema::hasColumn('made_ins', $made_column)) {
+            $made_column = 'name_en';
+        }
+        $made_in = MadeIn::select('id', $made_column, 'name_en')->get();
 
         return view('frontend.auction-product-details', [
             'product' => $auctionProduct,
@@ -425,6 +442,9 @@ class PagesController extends Controller
             'brands' => $brands,
             'units' => $units,
             'made_in' => $made_in,
+            'unit_column' => $unit_column,    // Pass unit_column to the view
+            'brand_column' => $brand_column,  // Pass brand_column to the view
+            'made_column' => $made_column,    // Pass made_column to the view
         ]);
     }
 

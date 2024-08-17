@@ -133,7 +133,7 @@
                                                 <select x-model="unit" class="form-control form-control-sm" id="unit">
                                                     {{-- <option value="" selected disabled>Select Unit</option> --}}
                                                     @foreach($units as $unit)
-                                                        <option value="{{ $unit->id }}" selected disabled>{{ $unit[$unit_column] ?? $unit['title_en'] }}</option>
+                                                          <option value="{{ $unit->id }}" selected disabled>{{ $unit[$unit_column] ?? $unit['title_en'] }}</option>
                                                     @endforeach
                                                 </select>
                                                 <template x-if="errors.hasOwnProperty('unit')">
