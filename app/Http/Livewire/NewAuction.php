@@ -236,28 +236,21 @@ class NewAuction extends Component
             $auction = Auction::with(['products.catalogue.images', 'unit'])->where('id', $auction->id)->first();
 
             if ($this->is_open_bid == 1) {
-
                 $em_data = UserProfile::where('country', $this->country)->where('city', $this->city)->where('neighbourhood', $this->neighbourhood)->get();
-
+                $emailsToSendOpenUser = [];
                 foreach ($em_data as $profile) {
-                    // Access the user's email
                     $email = $profile->user->email;
-                    dd($email); // Dump and die to check the email
+                    $emailsToSendOpenUser[] = $email;
                 }
-
-                $supplier_email_data = User::whereIn('id', $this->selectedSuppliers)->get();
-
-                $emailsToSend = $supplier_email_data->pluck('email');
-
-                // dd($emailsToSend);
-                if(!empty($emailsToSend)){
-                    foreach ($emailsToSend as $email) {
-                        Mail::send('emails.auction-creation-supplier-notifiaction', $data, function($message) use ($email) {
-                            $message->to($email)
-                                ->subject('Auction Created in Your Area, Bid Now');
-                        });
+                    // dd($emailsToSendOpenUser);
+                    if(!empty($emailsToSendOpenUser)){
+                        foreach ($emailsToSendOpenUser as $email) {
+                            Mail::send('emails.auction-creation-supplier-notifiaction', $data, function($message) use ($email) {
+                                $message->to($email)
+                                    ->subject('Auction Created in Your Area, Bid Now');
+                            });
+                        }
                     }
-                }
             }        
 
             if ($this->selectedSuppliers) {
