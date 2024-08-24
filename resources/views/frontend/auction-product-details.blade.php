@@ -162,7 +162,7 @@
 
                                     </div>
                                     <div class="row">
-                                        @if($product->auction->service_type !=2 )
+                                        {{-- @if($product->auction->service_type !=2 ) --}}
                                         <div class="col-md-6">
                                              
                                                 <div class="form-group">
@@ -182,9 +182,10 @@
                                                 <select x-model="brand" class="form-control form-control-sm" id="brand">
                                                     <option value="" selected disabled>Select a brand</option>
                                                     @foreach($brands as $brand)
-                                                        <option value="{{ $brand->id }}">{{ $brand[$brand_column] ?? $brand['title_en'] }}</option>
+                                                        <option selected disabled value="{{ $brand->id }}">{{ $brand[$brand_column] ?? $brand['title_en'] }}</option>
                                                     @endforeach
                                                 </select>
+                                                    <span class="text-danger"> For Exact Item Brand Selected </span>
 
 
                                                 @endif
@@ -194,7 +195,7 @@
                                                 </template>
                                             </div>
                                         </div>
-                                        @endif
+                                        {{-- @endif --}}
                                         @if($product->auction->included_delivery_cost == 1)
                                         <div class="col-md-6">
                                             <div class="form-group">

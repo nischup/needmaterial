@@ -491,7 +491,7 @@
                     <label for="delivery_time"> {{ __('Delivery Time Period') }}</label>
                     <select id="delivery_time" class="form-control" wire:model.defer="delivery_time">
                         <option >{{ __('Select One') }}</option>
-                        <option value="1">{{ __('09 AM - 12 AM') }}</option>
+                        <option value="1">{{ __('09 AM - 12 PM') }}</option>
                         <option value="2">{{ __('12 PM - 03 PM') }}</option>
                         <option value="3">{{ __('03 PM - 06 PM') }}</option>
                         <option value="4">{{ __('06 PM - 09 PM') }}</option>
